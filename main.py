@@ -27,9 +27,25 @@ def home():
     return render_template("index.html")
 
 
+@app.route('/blog')
+def blog():
+    return render_template("blog.html")
+
+
+@app.route('/post')
+def show_post():
+    return render_template("post.html")
+
+
+@app.route('/new_post')
+def new_post():
+    return render_template("new_post.html")
+
+
 @app.route('/contato')
 def contato():
     return render_template("contato.html")
+
 
 @app.route('/sobre-nos')
 def sobre_nos():

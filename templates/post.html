@@ -1,0 +1,105 @@
+<!-- {% from "bootstrap5/form.html" import render_form %} -->
+{% include "header.html" %}
+
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('../static/assets/img/poonhill.jpeg')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div>
+          <h1 class="post-heading">post.title</h1>
+          <h2 class="subheading post-heading">post.subtitle</h2>
+          <span class="meta post-heading fst-italic"
+            >Escrito por
+            <a href="#" class="post-heading">post.author.name </a>
+            em post.date
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- POST CONTENT -->
+<section class="section-show-post py-5">
+    <article>
+      <div class="container px-2 justify-content-center">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-8 col-lg-6 col-xl-8 px-5 bg-white rounded">
+              <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras quis pretium urna. Integer felis dolor, bibendum sit amet ipsum ut, porttitor rutrum eros. Aenean dolor dolor, consectetur a nunc vitae, blandit tempor sapien. Donec consequat fermentum erat quis maximus. Vivamus eget posuere nibh. Sed finibus, enim vel semper efficitur, turpis lorem fermentum mi, eget consectetur dolor justo a eros. Aliquam ornare egestas molestie. Suspendisse diam ex, congue ac fringilla eu, sollicitudin nec metus. Nunc aliquam ultrices velit, mollis dapibus massa pellentesque eu. Vestibulum in purus luctus, sagittis risus nec, suscipit metus. Quisque ullamcorper velit ac lectus convallis, ut fermentum diam vehicula. Donec rhoncus nibh pretium metus volutpat, vitae consequat eros euismod. Suspendisse potenti. Donec posuere viverra justo, id mattis ante cursus vel.
+
+                    Proin tortor enim, commodo sed quam non, pellentesque auctor libero. Donec leo risus, tincidunt vel velit non, venenatis placerat tortor. Pellentesque blandit turpis non pretium vulputate. Fusce ligula lectus, fermentum et cursus at, congue eu ipsum. Ut porta elit lacus, non hendrerit erat mollis at. Vivamus posuere ultrices dui, ac tempor arcu feugiat sed. Suspendisse in vestibulum arcu. Morbi dapibus vitae lectus quis euismod. In cursus semper sapien, mattis pretium ipsum finibus vel. Maecenas faucibus imperdiet faucibus. Fusce in congue libero. Aenean ut nunc sed sapien tincidunt fermentum. Vestibulum consequat, mauris at aliquet bibendum, massa libero ullamcorper velit, eget finibus diam enim quis nunc. Nullam nec porta turpis.
+
+                    Sed vehicula a tortor et egestas. Mauris tempor fermentum neque in ultricies. Nam eu tortor lacus. Nulla libero ipsum, tempus id aliquet ultrices, pellentesque vitae velit. Mauris vehicula vitae arcu non consequat. In rutrum, velit ac elementum sollicitudin, quam justo faucibus mi, sed finibus massa odio in diam. Donec efficitur, metus sed efficitur facilisis, est lorem viverra nibh, ac pretium lacus eros a diam.
+              </p>
+            <!--post.body|safe -->
+            <!-- ONLY SHOW EDIT BUTTON IF USER ID 1 (ADMIN USER) -->
+            <div class="d-flex justify-content-center mb-4">
+                <!-- edit post -->
+              <a class="btn btn-primary float-right mx-2"
+                href="#">Edit Post</a>
+                <!-- ONLY SHOW DELETE BUTTON IF USER ID 1 (ADMIN USER) -->
+                <a class="btn btn-danger float-right mx-2"
+                href="#">Delete Post</a>
+            </div>
+            
+            <!-- Comments Area -->
+              <!-- load ckeditor -->
+              <!-- Configure it with the name of the form field from CommentForm -->
+              <!-- Create the WTFORM quick form from CommentForm -->
+              <!-- render form, don't forget submit button -->
+            <div class="comment">
+              <!-- Show all the comments on a post -->
+              <ul class="commentList">
+                  <!-- Show all comments -->
+                <li>
+                  <div class="commenterImage">
+                    <img src="comment.comment_author.email | gravatar" />
+                  </div>
+                  <div class="commentText">
+                      <p>comment.text|safe </p>
+                    <span class="date sub-text">
+                        comment.posted_date.strftime('%B %d, %Y')
+                        by <strong>comment.comment_author.name </strong></span>
+                      <!-- ALLOW TO DELETE COMMENT IF SAME USER WHO CREATED AND IS LOGGED IN -->
+                      <span>
+                          <a href="#" class="btn btn-link text-danger"> Delete </a>
+                      </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+            <!-- SIDE DIV WITH OTHER POSTS -->
+            <div class="col-md-4 col-lg-3">
+              <div class="position-sticky" style="top: 2rem;">
+                <div class="p-4 mb-3">
+                  <h4 class="fst-italic">Postagens recentes:</h4>
+                  <ul class="list-unstyled border-bottom">
+                    <li>
+                      <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
+                        <img src="{{ url_for('static', filename='assets/img/qt.jpg') }}" alt="Image" class="img-fluid rounded">
+                        <div class="col">
+                          <h4 class="mb-0">other_post.title </h4>
+                          <p class=" small text-body-secondary">other_post.date</p>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="p-4 mb-3 bg-body-tertiary rounded">
+                    <h4 class="fst-italic">Sobre o Autor:</h4>
+                    <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers, content, or something else entirely. Totally up to you.</p>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+      
+    </article>
+    
+</section>
+
+
+{% include "footer.html" %}

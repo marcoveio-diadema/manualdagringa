@@ -1,0 +1,94 @@
+{% include "header.html" %}
+
+<!-- Page Header-->
+<header
+  class="masthead mb-0"
+  style="background-image: url('../static/assets/img/qt.jpg')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1 class="post-heading">Blog</h1>
+          <span class="subheading post-heading">Fique por dentro das novidades!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- blog main content -->
+<section class="bg-light py-5">
+    <div class="container mt-0 pt-3">
+      <div class="row">
+        <div class="col-md-8">
+            <h3 class="pb-4 my-4 border-bottom">
+                Últimos posts do blog:
+              </h3>
+            <!-- SHOW POSTS -->
+          <div class="card custom-card mb-3">
+              <div class="card-body">
+                  <a href="{{ url_for('show_post')}}">
+                      <h6 class="card-title">post.category.name</h6>
+                      <h3 class="card-subtitle mb-2">post.title</h3>
+                      <p class="card-text">post.subtitle</p>
+                  </a>
+                  <p class="small card-text">Posted by
+                      <a href="#">post.author.name
+                      </a>on post.date
+                      <!-- DELETE POST IF ADM -->
+                      <a href="#"> Delete post ✘</a>
+                  </p>
+              </div>
+          </div>
+            
+            
+            <!-- NEW POST IF ADM -->
+          <div class="d-flex justify-content-end my-4">
+            <a
+              class="btn btn-primary float-right"
+              href="{{ url_for('new_post') }}"
+              >Create New Post</a
+            >
+          </div>
+        <!-- TO USE REACT IN ORDER TO SHOW 10 POSTS PER TIME -->
+          <div class="d-flex justify-content-end mb-4">
+            <a class="btn btn-secondary text-uppercase" href="#!">Outros Posts ↓</a>
+          </div>
+        </div>
+    
+        <!-- QUICK SEARCH THROUGH POSTS -->
+        <div class="col-md-4">
+            <h3 class="pb-4 my-4 border-bottom">
+                Busca rápida no blog:
+              </h3>
+          <form class="my-4">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Busca rápida">
+              <button class="btn btn-outline-secondary" type="button">Buscar</button>
+            </div>
+          </form>
+          <!-- SHOW CATEGORIES -->
+        <div class="card-body">
+            <h5 class="card-title mb-3">Por categoria:</h5>
+            <ul class="list-group my-1">
+                <li class="list-group-item">
+                    <a href="#">category_name</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="#">category_name</a>
+                </li>
+                <li class="list-group-item">
+                   <a href="#">category_name</a>
+                </li>
+            </ul>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+</section>
+
+
+
+{% include "footer.html" %}

@@ -72,6 +72,22 @@ p, span, ul, li {
     background-color: #F5F5F5 !important;
 }
 
+/* SHOW POST PAGE */
+.post-heading {
+    color: #F5F5F5 !important;
+}
+
+.section-show-post {
+    background-color: #F5F5F5 !important;
+}
+
+/* NEW OR EDIT POST */
+
+.section-new-post {
+    background-color: #F5F5F5 !important;
+}
+
+
 
 /* FOOTER STYLING */
 

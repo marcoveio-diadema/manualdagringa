@@ -1,0 +1,36 @@
+<!--{% from "bootstrap5/form.html" import render_form %}-->
+{% include "header.html" %}
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('../static/assets/img/sunrise_angkorwat.jpeg')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="page-heading">
+          <!-- IF EDIT SHOW EDIT -->
+          <h1 class="post-heading">Edit Post</h1>
+          <!-- OTHERWISE SHOW CREATE NEW POST -->
+          <h1 class="post-heading">New Post</h1>
+          <span class="subheading post-heading"
+            >Escreva o novo post aqui!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- SECTION ADD OR EDIT POST -->
+<section class="section-new-post py-5">
+    <main class="mb-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <!-- LOAD CKEDITOR, RENDER IT AND SUBMIT -->
+          </div>
+        </div>
+      </div>
+    </main>
+</section>
+
+{% include "footer.html" %}
