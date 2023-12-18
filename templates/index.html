@@ -1,0 +1,185 @@
+{% include "header.html" %}
+
+<!-- Page Header-->
+<header
+  class="masthead index-header border-bottom border-white"
+  style="background-image: url('../static/assets/img/poonhill.jpeg')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-left">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1 class="features-text" id="landing-page-h1">Visto Férias Trabalho</h1>
+          <span class="subheading features-text">O mundo agora está ao seu alcance!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- FEATURES SECTION -->
+
+<section class="section features">
+    <div class="container px-4">
+        <div class="row g-4 py-4 row-cols-1 row-cols-lg-3">
+          <div class="feature col">
+            <div class="container d-flex justify-content-center">
+                <span class="fa-stack fa-lg mb-2">
+                  <i class="fa-solid fa-passport fa-2xl features-icons"></i>
+              </span>
+            </div>
+            <h4 class="fs-2 text-body-emphasis mt-2 features-text d-flex justify-content-center">Passaporte na mão</h4>
+            <p class="features-text">Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+            <hr class="d-lg-none">
+          </div>
+          <div class="feature col">
+            <div class="container d-flex justify-content-center">
+                <span class="fa-stack fa-lg mb-2">
+                  <i class="fa-solid fa-suitcase fa-2xl features-icons"></i>
+              </span>
+            </div>
+            <h4 class="fs-2 text-body-emphasis mt-2 features-text d-flex justify-content-center">Malas prontas</h4>
+            <p class="features-text">Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+            <hr class="d-lg-none">
+          </div>
+          <div class="feature col">
+            <div class="container d-flex justify-content-center">
+              <span class="fa-stack fa-lg mb-2">
+                  <i class="fa-solid fa-plane fa-2xl features-icons" ></i>
+              </span>
+            </div>
+            <h4 class="fs-2 text-body-emphasis mt-2 features-text d-flex justify-content-center">Partiu Mundão!</h4>
+            <p class="features-text">Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+          </div>
+        </div>
+    </div>
+</section>
+
+<!-- LATEST POST SECTION -->
+<section class="section latest-post">
+    <div class="container">
+        <div class="row my-3 mx-3 border rounded shadow">
+            <!-- Image on the right for large-sized screens -->
+            <div class="col-md-12 col-lg-5 order-md-2 p-4 p-md-5 mb-4">
+                <img src="{{ url_for('static', filename='assets/img/qt.jpg') }}" alt="Image" class="img-fluid rounded">
+            </div>
+            
+            <div class="col-md-12 col-lg-7 order-md-1">
+                <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis">
+                    <h1 class="display-4 fst-italic ">Title of a longer featured blog post</h1>
+                    <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
+                    <a href="#" class="btn btn-custom text-uppercase">Continue lendo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OTHER POSTS SECTION -->
+<section class="section other-posts py-5">
+    <div class="container px-3 px-lg-4">
+        <div class="row gx-3 gx-lg-4 justify-content-center">
+            <!-- First Card -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <a href="#" class="index-page-card-link">
+                    <div class="card card-main-posts h-100">
+                        <img src="{{ url_for('static', filename='assets/img/sunrise_angkorwat.jpeg') }}" class="card-img-top img-fluid" alt="Photo 1">
+                        <div class="card-body d-flex flex-column">
+                            <h4 class="card-title main-posts-title">Title 1</h4>
+                            <hr />
+                            <p class="card-text">Sed vehicula a tortor et egestas. Mauris tempor fermentum neque in ultricies.
+                                Nam eu tortor lacus. Nulla libero ipsum,
+                            </p>
+                            <div class="mt-auto d-flex justify-content-end mb-4">
+                                <a href="#" class="btn btn-custom text-uppercase">Ler mais <strong>→</strong></a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Second Card -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <a href="#" class="index-page-card-link">
+                    <div class="card card-main-posts h-100">
+                        <img src="{{ url_for('static', filename='assets/img/GOPR1432.JPG') }}" class="card-img-top img-fluid" alt="Photo 2">
+                        <div class="card-body d-flex flex-column">
+                            <h4 class="card-title">Title 1</h4>
+                            <hr />
+                            <p class="card-text">Sed vehicula a tortor et egestas. Mauris tempor fermentum neque in ultricies.
+                                Nam eu tortor lacus. Nulla libero ipsum, tempus id aliquet ultrices, pellentesque vitae velit.
+                                Mauris vehicula vitae arcu non consequat.
+                            </p>
+                            <div class="mt-auto d-flex justify-content-end mb-4">
+                                <a href="#" class="btn btn-custom text-uppercase">Ler mais <strong>→</strong></a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Third Card -->
+            <div class="col-md-6 col-lg-4 mb-4">
+                <a href="#" class="index-page-card-link">
+                    <div class="card card-main-posts h-100">
+                        <img src="{{ url_for('static', filename='assets/img/gliereswinter1.jpeg') }}" class="card-img-top img-fluid" alt="Photo 2">
+                        <div class="card-body d-flex flex-column">
+                            <h4 class="card-title">30 dias explorando os alpes europeus, da França ate a Austria de carro</h4>
+                            <hr />
+                            <p class="card-text">Sed vehicula a tortor et egestas. Mauris tempor fermentum neque in ultricies.
+                                Nam eu tortor lacus. Nulla libero ipsum, tempus id aliquet ultrices, pellentesque vitae velit.
+                                Mauris vehicula vitae arcu non consequat.
+                            </p>
+                            <div class="mt-auto d-flex justify-content-end mb-4">
+                                <a href="#" class="btn btn-custom text-uppercase">Ler mais <strong>→</strong></a>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end mb-4">
+            <a class="btn btn-primary float-right" href="#">Create New Post</a>
+        </div>
+
+      <!-- TO BLOG HOMEPAGE -->
+      <div class="d-flex justify-content-end mb-4">
+        <a class="btn btn-secondary text-uppercase" href="#!">todos os Posts →</a>
+      </div>
+    </div>
+</section>
+
+
+<!-- SUBSCRIBE SECTION -->
+
+<section class="section-subscribe py-5">
+    <div class="container px-3 px-lg-4">
+      <div class="row gx-3 gx-lg-4 d-flex align-items-center justify-content-center">
+        <!-- Column 1: Logo and Text -->
+        <div class="col-md-4">
+          <img src="{{ url_for('static', filename='assets/img/manual_logo.png') }}" alt="Logo" class="img-fluid" width="300px">
+          <p id="subscribe-text">O mundo agora está ao seu alcance!</p>
+        </div>
+    
+        <!-- Column 2: Newsletter Signup -->
+        <div class="col-md-8 index-page-form py-4 rounded px-4">
+          <h2>Sign up for our Newsletter</h2>
+          <p>Get the latest updates and news delivered straight to your inbox.</p>
+          
+          <!-- Newsletter Form -->
+          <form class="">
+              <div class="form-group gx-3 gx-lg-4 my-3">
+                <label for="email">Email address:</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+              </div>
+              <div class="container d-flex justify-content-end px-5">
+                <button type="submit" class="btn btn-custom">Subscribe</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</section>
+
+
+{% include "footer.html" %}

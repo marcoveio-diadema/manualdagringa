@@ -1,0 +1,79 @@
+/* GENERAL STYLING */
+h1, h2, h3, h4, h5, h6 {
+    color: #30475E !important;
+}
+
+p, span, ul, li {
+    color: #121212 !important
+}
+
+.btn-custom {
+    background-color: #30475E; /* Default color */
+    color: #ffffff; /* Text color */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+ .btn-custom:hover {
+    background-color: #4682A9; /* Hover color */
+    color: #ffffff; /* Text color on hover */
+}
+
+/* HEADER */
+
+.index-header {
+    margin-bottom: 0px !important;
+}
+
+#landing-page-h1 {
+    text-shadow: #F05454 0 0 2px; !important;
+}
+
+/* INDEX PAGE - FEATURES SECTION */
+.features {
+    background-color: #30475E;
+}
+
+.features-icons {
+    color: #F05454
+}
+
+.features-text {
+    color: #F5F5F5 !important;
+}
+ /* INDEX PAGE - OTHER POSTS SECTION */
+
+.other-posts {
+    background-color: #F5F5F5;
+}
+
+.card-main-posts:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+
+/* INDEX PAGE - SUBSCRIBE SECTION */
+
+.section-subscribe {
+    background-color: #30475E; !important;
+}
+
+.index-page-form {
+    background-color: #F5F5F5 !important;
+}
+
+#subscribe-text {
+    color: #F5F5F5 !important;
+}
+
+
+/* FOOTER STYLING */
+
+.fa-stack:hover .fa-circle {
+      color: #4682A9; /* Change the color to your desired hover color */
+    }
+
+.fa-stack .fa-circle {
+    color: #30475E
+}
+
