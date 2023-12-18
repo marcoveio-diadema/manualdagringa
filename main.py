@@ -42,6 +42,20 @@ def new_post():
     return render_template("new_post.html")
 
 
+@app.route('/category')
+def blog_category():
+    return render_template("blog_category.html")
+
+@app.route('/signup')
+def sign_up():
+    return render_template("sign_up.html")
+
+
+@app.route('/login')
+def login():
+    return render_template("login.html")
+
+
 @app.route('/contato')
 def contato():
     return render_template("contato.html")
@@ -50,6 +64,10 @@ def contato():
 @app.route('/sobre-nos')
 def sobre_nos():
     return render_template("sobre-nos.html")
+
+@app.route('/logout')
+def logout():
+    return render_template("index.html")
 
 
 

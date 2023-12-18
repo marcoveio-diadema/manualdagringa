@@ -87,6 +87,28 @@ p, span, ul, li {
     background-color: #F5F5F5 !important;
 }
 
+/* REGISTER PAGE */
+
+.section-register {
+    background-color: #F5F5F5 !important;
+}
+
+/* LOGIN PAGE */
+
+.section-login {
+    background-color: #F5F5F5 !important;
+}
+
+/* CATEGORIES PAGE */
+
+.section-categories {
+    background-color: #F5F5F5 !important;
+}
+
+.all-posts:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
 
 
 /* FOOTER STYLING */

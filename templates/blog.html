@@ -26,7 +26,7 @@
                 Últimos posts do blog:
               </h3>
             <!-- SHOW POSTS -->
-          <div class="card custom-card mb-3">
+          <div class="card custom-card all-posts mb-3">
               <div class="card-body">
                   <a href="{{ url_for('show_post')}}">
                       <h6 class="card-title">post.category.name</h6>
@@ -73,13 +73,13 @@
             <h5 class="card-title mb-3">Por categoria:</h5>
             <ul class="list-group my-1">
                 <li class="list-group-item">
-                    <a href="#">category_name</a>
+                    <a href="{{ url_for('blog_category')}}">category_name</a>
                 </li>
                 <li class="list-group-item">
-                    <a href="#">category_name</a>
+                    <a href="{{ url_for('blog_category')}}">category_name</a>
                 </li>
                 <li class="list-group-item">
-                   <a href="#">category_name</a>
+                   <a href="{{ url_for('blog_category')}}">category_name</a>
                 </li>
             </ul>
         </div>
