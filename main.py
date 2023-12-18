@@ -27,6 +27,16 @@ def home():
     return render_template("index.html")
 
 
+@app.route('/contato')
+def contato():
+    return render_template("contato.html")
+
+@app.route('/sobre-nos')
+def sobre_nos():
+    return render_template("sobre-nos.html")
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 

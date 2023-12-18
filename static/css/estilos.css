@@ -18,11 +18,11 @@ p, span, ul, li {
     color: #ffffff; /* Text color on hover */
 }
 
-/* HEADER */
-
-.index-header {
+.masthead {
     margin-bottom: 0px !important;
 }
+
+/* HEADER */
 
 #landing-page-h1 {
     text-shadow: #F05454 0 0 2px; !important;
@@ -64,6 +64,12 @@ p, span, ul, li {
 
 #subscribe-text {
     color: #F5F5F5 !important;
+}
+
+/* SOBRE NOS PAGE */
+
+.section-sobre {
+    background-color: #F5F5F5 !important;
 }
 
 
