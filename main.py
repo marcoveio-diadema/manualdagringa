@@ -1,11 +1,12 @@
 from datetime import date, datetime
 from flask import Flask, abort, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
-from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
+from flask_ckeditor import CKEditor
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
+import smtplib
 
 # import forms.py
 from forms import CommentForm, ContactForm, CategoryForm, CreatePostForm, LoginForm, RegisterForm, SubscribeForm
@@ -18,7 +19,7 @@ from db import db, User, BlogPost, Subscribe, Comment, Category, init_db
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donTGtgK86gTihBXox7C0sKR6b'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
-# ckeditor = CKEditor(app)
+ckeditor = CKEditor(app)
 Bootstrap5(app)
 
 # load db config
@@ -51,22 +52,62 @@ def admin_only(func):
 
 @app.route('/')
 def home():
-    return render_template("index.html")
+    result = db.session.execute(db.select(BlogPost))
+    posts = result.scalars().all()
+    return render_template("index.html", all_posts=posts, current_user=current_user)
 
 
 @app.route('/blog')
 def blog():
-    return render_template("blog.html")
+    # Fetch all unique categories
+    categories = db.session.query(Category.name).distinct().all()
+    categories = [category[0] for category in categories]
+
+    # Fetch all posts
+    result = db.session.execute(db.select(BlogPost))
+    posts = result.scalars().all()
+
+    return render_template("blog.html", all_posts=posts, all_categories=categories, current_user=current_user)
 
 
-@app.route('/post')
-def show_post():
-    return render_template("post.html")
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
+def show_post(post_id):
+    # current post
+    requested_post = db.get_or_404(BlogPost, post_id)
+
+    return render_template("post.html", post=requested_post, current_user=current_user)
 
 
-@app.route('/new_post')
-def new_post():
-    return render_template("new_post.html")
+@app.route('/new_post', methods=['GET', 'POST'])
+@admin_only
+def create_post():
+    form = CreatePostForm()
+    # fetch all categories
+    form.category.choices = [(category.id, category.name) for category in Category.query.all()]
+
+    # fetch data from form
+    if form.validate_on_submit():
+        # Retrieve the selected category
+        selected_category_id = form.category.data
+        selected_category = Category.query.get(selected_category_id)
+
+        new_post = BlogPost(
+            title=form.title.data,
+            intro=form.intro.data,
+            slug=form.slug.data,
+            img_url=form.img_url.data,
+            body=form.body.data,
+            author=current_user,
+            category=selected_category,
+            date=date.today().strftime("%B %d, %Y"),
+        )
+
+        db.session.add(new_post)
+        db.session.commit()
+
+        return redirect(url_for('blog'))
+
+    return render_template("new_post.html", form=form, current_user=current_user)
 
 
 @app.route('/category')
@@ -108,7 +149,7 @@ def sign_up():
         # Log in and authenticate user after adding details to database.
         login_user(new_user)
 
-        return redirect(url_for('blog'))
+        return redirect(url_for('home'))
 
     return render_template("sign_up.html", form=form)
 
@@ -135,7 +176,7 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
-            return redirect(url_for('blog'))
+            return redirect(url_for('home'))
     # if methods == GET
     return render_template("login.html", form=form)
 
@@ -149,11 +190,11 @@ def contato():
 def sobre_nos():
     return render_template("sobre-nos.html")
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('home'))
-
 
 
 if __name__ == '__main__':

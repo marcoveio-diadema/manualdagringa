@@ -1,4 +1,4 @@
-<!--{% from "bootstrap5/form.html" import render_form %}-->
+{% from "bootstrap5/form.html" import render_form %}
 {% include "header.html" %}
 
 <!-- Page Header -->
@@ -8,9 +8,12 @@
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
           <!-- IF EDIT SHOW EDIT -->
+          
           <h1 class="post-heading">Edit Post</h1>
+          
           <!-- OTHERWISE SHOW CREATE NEW POST -->
           <h1 class="post-heading">New Post</h1>
+          
           <span class="subheading post-heading"
             >Escreva o novo post aqui!</span>
         </div>
@@ -26,7 +29,8 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
-            <!-- LOAD CKEDITOR, RENDER IT AND SUBMIT -->
+              {{ ckeditor.load() }} {{ ckeditor.config(name='body') }}
+              {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
           </div>
         </div>
       </div>

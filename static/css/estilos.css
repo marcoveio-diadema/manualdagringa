@@ -22,6 +22,12 @@ p, span, ul, li {
     margin-bottom: 0px !important;
 }
 
+@media only screen and (min-width: 1000px) {
+    .masthead {
+        height: 800px !important;
+    }
+}
+
 /* HEADER */
 
 #landing-page-h1 {
@@ -73,6 +79,10 @@ p, span, ul, li {
 }
 
 /* SHOW POST PAGE */
+#post_img {
+    height: 500px !important;
+}
+
 .post-heading {
     color: #F5F5F5 !important;
 }

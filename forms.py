@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditorField
+from flask_ckeditor.fields import CKEditorField
 
 
 # WTForm for creating a blog post
@@ -52,4 +53,4 @@ class CategoryForm(FlaskForm):
 class ContactForm(FlaskForm):
     name = StringField("Nome:", validators=[DataRequired()])
     email = StringField("Email:", validators=[DataRequired()])
-    mensagem = TextAreaField("Mensagem:", validators=[DataRequired()], render_kw={"rows": 7, "cols": 30})
+    message = TextAreaField("Mensagem:", validators=[DataRequired()], render_kw={"rows": 7, "cols": 30})

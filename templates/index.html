@@ -63,14 +63,18 @@
             <div class="col-md-12 col-lg-5 order-md-2 p-4 p-md-5 mb-4">
                 <img src="{{ url_for('static', filename='assets/img/qt.jpg') }}" alt="Image" class="img-fluid rounded">
             </div>
-            
+            {% for post in all_posts %}
             <div class="col-md-12 col-lg-7 order-md-1">
                 <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis">
-                    <h1 class="display-4 fst-italic ">Title of a longer featured blog post</h1>
-                    <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
-                    <a href="{{ url_for('show_post')}}" class="btn btn-custom text-uppercase">Continue lendo</a>
+                    <h4>{{ post.category.name }}</h4>
+                    <a href="{{ url_for('show_post', post_id=post.id) }}" class="">
+                        <h1 class="display-4 fst-italic ">{{post.title}}</h1>
+                    </a>
+                    <p class="lead my-3">{{ post.intro }}</p>
+                    <a href="{{ url_for('show_post', post_id=post.id) }}" class="btn btn-custom text-uppercase">Continue lendo</a>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -138,13 +142,15 @@
                 </a>
             </div>
         </div>
+        {% if current_user.id == 1 %}
         <div class="d-flex justify-content-end mb-4">
-            <a class="btn btn-primary float-right" href="#">Create New Post</a>
+            <a class="btn btn-primary float-right" href="{{ url_for( 'create_post') }}">Create New Post</a>
         </div>
+        {% endif %}
 
       <!-- TO BLOG HOMEPAGE -->
       <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-secondary text-uppercase" href="#!">todos os Posts →</a>
+        <a class="btn btn-secondary text-uppercase" href="{{ url_for('blog')}}">todos os Posts →</a>
       </div>
     </div>
 </section>
