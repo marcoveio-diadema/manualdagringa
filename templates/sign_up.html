@@ -1,4 +1,4 @@
-<!-- {% from "bootstrap5/form.html" import render_form %}-->
+{% from "bootstrap5/form.html" import render_form %}
 {% include "header.html" %}
 
 <!-- Page Header -->
@@ -22,6 +22,7 @@
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
             <!-- RENDER SIGN UP FORM AND SUBMIT BUTTON -->
+               {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
           </div>
         </div>
       </div>

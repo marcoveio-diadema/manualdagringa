@@ -4,22 +4,49 @@ from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
-from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.orm import relationship
-from sqlalchemy import func
 
 # import forms.py
+from forms import CommentForm, ContactForm, CategoryForm, CreatePostForm, LoginForm, RegisterForm, SubscribeForm
 
-# import db.py
+#import db.py
+from db import db, User, BlogPost, Subscribe, Comment, Category, init_db
 
 
 # FLASK CONFIGURATION
 app = Flask(__name__)
-#app.config['SECRET_KEY'] = '8BYkEfBA6O6donTGtgK86gTihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = '8BYkEfBA6O6donTGtgK86gTihBXox7C0sKR6b'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 # ckeditor = CKEditor(app)
 Bootstrap5(app)
+
+# load db config
+init_db(app)
+
+
+# Create an instance of LoginManager
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'  # Specify the login view endpoint
+
+
+# LOGIN USER
+@login_manager.user_loader
+def load_user(user_id):
+    return db.get_or_404(User, user_id)
+
+
+# ADMIN DECORATOR FUNCTION
+def admin_only(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        # Check if the current user is logged in and has ID 1
+        if current_user.id == 1:
+            return func(*args, **kwargs)
+        else:
+            abort(403)  # HTTP 403 Forbidden error
+
+    return decorated_function
 
 
 @app.route('/')
@@ -46,14 +73,71 @@ def new_post():
 def blog_category():
     return render_template("blog_category.html")
 
-@app.route('/signup')
+
+@app.route('/signup', methods=['GET', 'POST'])
 def sign_up():
-    return render_template("sign_up.html")
+    form = RegisterForm()
+    if form.validate_on_submit():
+        # check if already registerd
+        email = form.email.data
+        result = db.session.execute(db.select(User).where(User.email == email))
+        user = result.scalar()
+
+        if user:
+            # User already exists
+            flash("You've already signed up with that email, log in instead!")
+            return redirect(url_for('login'))
+
+        # hash and salt password
+        hash_and_salted_password = generate_password_hash(
+            form.password.data,
+            method='pbkdf2:sha256',
+            salt_length=8
+        )
+
+        new_user = User(
+            name = form.name.data,
+            email = form.email.data,
+            password = hash_and_salted_password,
+        )
+
+        # commit changes
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Log in and authenticate user after adding details to database.
+        login_user(new_user)
+
+        return redirect(url_for('blog'))
+
+    return render_template("sign_up.html", form=form)
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template("login.html")
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        # retrieve data from form
+        email = form.email.data
+        password = form.password.data
+
+        # find user in User DB by email entered
+        result = db.session.execute(db.Select(User).where(User.email == email))
+        user = result.scalar()
+
+        # check if login details are correct
+        if not user:
+            flash("Email não encontrado, tente novamente.")
+            return redirect(url_for('login'))
+        elif not check_password_hash(user.password, password):
+            flash("Senha incorreta, tente novamente.")
+            return redirect(url_for('login'))
+        else:
+            login_user(user)
+            return redirect(url_for('blog'))
+    # if methods == GET
+    return render_template("login.html", form=form)
 
 
 @app.route('/contato')
@@ -67,7 +151,8 @@ def sobre_nos():
 
 @app.route('/logout')
 def logout():
-    return render_template("index.html")
+    logout_user()
+    return redirect(url_for('home'))
 
 
 
