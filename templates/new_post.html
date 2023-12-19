@@ -8,14 +8,16 @@
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
           <!-- IF EDIT SHOW EDIT -->
-          
+          {% if is_edit: %}
           <h1 class="post-heading">Edit Post</h1>
-          
+            <span class="subheading post-heading"
+            >Edite o post aqui!</span>
           <!-- OTHERWISE SHOW CREATE NEW POST -->
+            {% else: %}
           <h1 class="post-heading">New Post</h1>
-          
           <span class="subheading post-heading"
             >Escreva o novo post aqui!</span>
+            {% endif %}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-<!-- {% from "bootstrap5/form.html" import render_form %} -->
+{% from "bootstrap5/form.html" import render_form %}
 {% include "header.html" %}
 
 <!-- Page Header-->
@@ -11,7 +11,7 @@
           <h2 class="subheading post-heading">{{post.intro}}</h2>
           <span class="meta post-heading fst-italic"
             >Escrito por
-            <a href="#" class="post-heading">{{post.author.name}} </a>
+            <a href="{{ url_for('sobre_nos')}}" class="post-heading">{{post.author.name}} </a>
             em {{post.date}}
           </span>
         </div>
@@ -29,41 +29,45 @@
               <p>
                   {{ post.body|safe }}
               </p>
-            <!--post.body|safe -->
             <!-- ONLY SHOW EDIT BUTTON IF USER ID 1 (ADMIN USER) -->
+              {% if current_user.id == 1 %}
             <div class="d-flex justify-content-center mb-4">
                 <!-- edit post -->
               <a class="btn btn-primary float-right mx-2"
-                href="#">Edit Post</a>
+                href="{{ url_for('edit_post', post_id=post.id)}}">Edit Post</a>
                 <!-- ONLY SHOW DELETE BUTTON IF USER ID 1 (ADMIN USER) -->
                 <a class="btn btn-danger float-right mx-2"
-                href="#">Delete Post</a>
+                href="{{ url_for('delete_post', post_id=post.id)}}">Delete Post</a>
             </div>
+              {% endif %}
             
             <!-- Comments Area -->
-              <!-- load ckeditor -->
-              <!-- Configure it with the name of the form field from CommentForm -->
-              <!-- Create the WTFORM quick form from CommentForm -->
-              <!-- render form, don't forget submit button -->
+              {{ ckeditor.load() }} {{ ckeditor.config(name='comment_text') }}
+              {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+              
             <div class="comment">
               <!-- Show all the comments on a post -->
               <ul class="commentList">
                   <!-- Show all comments -->
+                  {% for comment in post.comments | sort(attribute='posted_date', reverse=True) %}
                 <li>
                   <div class="commenterImage">
-                    <img src="comment.comment_author.email | gravatar" />
+                    <img src="{{comment.comment_author.email | gravatar}}" />
                   </div>
                   <div class="commentText">
-                      <p>comment.text|safe </p>
+                      <p>{{comment.text|safe}} </p>
                     <span class="date sub-text">
-                        comment.posted_date.strftime('%B %d, %Y')
-                        by <strong>comment.comment_author.name </strong></span>
+                        {{comment.posted_date.strftime('%B %d, %Y')}}
+                        by <strong>{{comment.comment_author.name}} </strong></span>
                       <!-- ALLOW TO DELETE COMMENT IF SAME USER WHO CREATED AND IS LOGGED IN -->
+                      {% if current_user.is_authenticated and current_user.id == comment.comment_author.id %}
                       <span>
-                          <a href="#" class="btn btn-link text-danger"> Delete </a>
+                          <a href="{{ url_for('delete_comment', comment_id=comment.id) }}" class="btn btn-link text-danger"> Delete </a>
                       </span>
+                      {% endif %}
                   </div>
                 </li>
+                  {% endfor %}
               </ul>
             </div>
           </div>

@@ -30,6 +30,16 @@ init_db(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'  # Specify the login view endpoint
 
+# For adding profile images to the comment section
+gravatar = Gravatar(app,
+                    size=100,
+                    rating='g',
+                    default='retro',
+                    force_default=False,
+                    force_lower=False,
+                    use_ssl=False,
+                    base_url=None)
+
 
 # LOGIN USER
 @login_manager.user_loader
@@ -75,7 +85,47 @@ def show_post(post_id):
     # current post
     requested_post = db.get_or_404(BlogPost, post_id)
 
-    return render_template("post.html", post=requested_post, current_user=current_user)
+    # fetch comments form
+    comment_form = CommentForm()
+    # only allow logged-in users to comment
+    if comment_form.validate_on_submit():
+        if not current_user.is_authenticated:
+            flash("Você precisa fazer o login ou se registrar para comentar nos posts.")
+            return redirect(url_for("login"))
+
+        new_comment = Comment(
+            text=comment_form.comment_text.data,
+            comment_author=current_user,
+            parent_post=requested_post,
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+
+        # Reset the comment text area after submitting the comment
+        comment_form.comment_text.data = ''
+
+    # Fetch comments associated with the post
+    comments = Comment.query.filter_by(post_id=post_id).all()
+
+    return render_template("post.html", post=requested_post, current_user=current_user,
+                           form=comment_form, comments=comments)
+
+
+@app.route("/delete-comment/<int:comment_id>", methods=["GET", "POST"])
+def delete_comment(comment_id):
+    comment_to_delete = Comment.query.get(comment_id)
+
+    if comment_to_delete:
+        # Check if the current user is the author of the comment
+        if current_user.is_authenticated and current_user.id == comment_to_delete.comment_author.id:
+            db.session.delete(comment_to_delete)
+            db.session.commit()
+            flash("Comment deleted successfully.")
+        else:
+            abort(403)  # Forbidden
+
+    # Redirect back to the post page
+    return redirect(url_for("show_post", post_id=comment_to_delete.post_id))
 
 
 @app.route('/new_post', methods=['GET', 'POST'])
@@ -108,6 +158,49 @@ def create_post():
         return redirect(url_for('blog'))
 
     return render_template("new_post.html", form=form, current_user=current_user)
+
+
+@app.route('/edit-post/<int:post_id>', methods=['GET', 'POST'])
+@admin_only
+def edit_post(post_id):
+    post = db.get_or_404(BlogPost, post_id)
+
+    edit_form = CreatePostForm(
+        title=post.title,
+        intro=post.intro,
+        slug=post.slug,
+        img_url=post.img_url,
+        body=post.body,
+        author=post.author,
+        category=post.category,
+    )
+
+    # Fetch all categories
+    categories = [(category.id, category.name) for category in Category.query.all()]
+
+    # Set choices for the category field in the form
+    edit_form.category.choices = categories
+
+    if edit_form.validate_on_submit():
+        post.title = edit_form.title.data
+        post.intro = edit_form.intro.data
+        post.slug = edit_form.slug.data
+        post.img_url = edit_form.img_url.data
+        post.author = current_user
+        post.body = edit_form.body.data
+
+        db.session.commit()
+        return redirect(url_for('show_post', post_id=post.id))
+    return render_template("new_post.html", form=edit_form, is_edit=True, current_user=current_user, categories=categories)
+
+
+@app.route('/delete-post/<int:post_id>')
+@admin_only
+def delete_post(post_id):
+    post_to_delete = db.get_or_404(BlogPost, post_id)
+    db.session.delete(post_to_delete)
+    db.session.commit()
+    return redirect(url_for('blog'))
 
 
 @app.route('/category')
