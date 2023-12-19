@@ -77,15 +77,19 @@
                 <div class="p-4 mb-3">
                   <h4 class="fst-italic">Postagens recentes:</h4>
                   <ul class="list-unstyled border-bottom">
+                      <!-- LOOP THROUGH OTHER POSTS -->
+                      {% for other_post in other_posts %}
                     <li>
-                      <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
-                        <img src="{{ url_for('static', filename='assets/img/qt.jpg') }}" alt="Image" class="img-fluid rounded">
+                      <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
+                         href="{{ url_for('show_post', post_id=other_post.id) }}">
+                        <img src="{{ other_post.img_url }}" alt="Image" class="img-fluid rounded">
                         <div class="col">
-                          <h4 class="mb-0">other_post.title </h4>
-                          <p class=" small text-body-secondary">other_post.date</p>
+                          <h4 class="mb-0">{{other_post.title}} </h4>
+                          <p class=" small text-body-secondary">{{other_post.date.strftime('%d/%m/%Y') }}</p>
                         </div>
                       </a>
                     </li>
+                      {% endfor %}
                   </ul>
                 </div>
                 <div class="p-4 mb-3 bg-body-tertiary rounded">

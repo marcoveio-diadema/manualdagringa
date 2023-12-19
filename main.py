@@ -62,8 +62,11 @@ def admin_only(func):
 
 @app.route('/')
 def home():
-    result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all()
+    #result = db.session.execute(db.select(BlogPost))
+    #posts = result.scalars().all()
+
+    posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
+
     return render_template("index.html", all_posts=posts, current_user=current_user)
 
 
@@ -74,8 +77,7 @@ def blog():
     categories = [category[0] for category in categories]
 
     # Fetch all posts
-    result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all()
+    posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
 
     return render_template("blog.html", all_posts=posts, all_categories=categories, current_user=current_user)
 
@@ -84,6 +86,9 @@ def blog():
 def show_post(post_id):
     # current post
     requested_post = db.get_or_404(BlogPost, post_id)
+
+    # other posts
+    other_posts = BlogPost.query.filter(BlogPost.id != post_id).order_by(BlogPost.date.desc()).all()
 
     # fetch comments form
     comment_form = CommentForm()
@@ -108,7 +113,7 @@ def show_post(post_id):
     comments = Comment.query.filter_by(post_id=post_id).all()
 
     return render_template("post.html", post=requested_post, current_user=current_user,
-                           form=comment_form, comments=comments)
+                           form=comment_form, comments=comments, other_posts=other_posts)
 
 
 @app.route("/delete-comment/<int:comment_id>", methods=["GET", "POST"])
@@ -149,7 +154,7 @@ def create_post():
             body=form.body.data,
             author=current_user,
             category=selected_category,
-            date=date.today().strftime("%B %d, %Y"),
+            date=datetime.utcnow(),
         )
 
         db.session.add(new_post)

@@ -35,7 +35,7 @@ class BlogPost(db.Model):
     title = db.Column(db.String(150), unique=True, nullable=False)
     intro = db.Column(db.String(250), nullable=False)
     slug = db.Column(db.String(150), nullable=False)
-    date = db.Column(db.String(250), nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
     body = db.Column(db.Text, nullable=False)
     img_url = db.Column(db.String(500), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
