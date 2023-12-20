@@ -1,10 +1,10 @@
 /* GENERAL STYLING */
 h1, h2, h3, h4, h5, h6 {
-    color: #30475E !important;
+    color: #4682A9 !important;
 }
 
 p, span, ul, li {
-    color: #121212 !important
+    color: #30475E !important;
 }
 
 .btn-custom {
@@ -50,10 +50,12 @@ p, span, ul, li {
 
 .latest-post-card{
     border: none !important;
+    background-color: transparent !important;
 }
 
 .latest-post-card:hover {
     transform: translateY(-5px);
+    background-color: transparent !important;
 }
 
 .other-posts {
@@ -63,6 +65,18 @@ p, span, ul, li {
 .card-main-posts:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-5px);
+}
+
+.card-category-text {
+    color: #F05454 !important;
+}
+
+.search-card-text {
+    font-size: 0.5em !important
+}
+
+.category-search-text {
+    color: #F05454 !important;
 }
 
 
@@ -126,6 +140,12 @@ p, span, ul, li {
 .all-posts:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-5px);
+}
+
+/* CONTACT PAGE */
+
+.contact {
+    height: 400px !important;
 }
 
 

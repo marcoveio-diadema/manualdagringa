@@ -72,27 +72,33 @@
             </div>
           </div>
             <!-- SIDE DIV WITH OTHER POSTS -->
-            <div class="col-md-4 col-lg-3">
+            <div class="col-md-4 col-lg-4">
               <div class="position-sticky" style="top: 2rem;">
                 <div class="p-4 mb-3">
                   <h4 class="fst-italic">Postagens recentes:</h4>
                   <ul class="list-unstyled border-bottom">
                       <!-- LOOP THROUGH OTHER POSTS -->
                       {% for other_post in other_posts %}
+                      {% if loop.index <= 5 %}
                     <li>
                       <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
                          href="{{ url_for('show_post', post_id=other_post.id) }}">
-                        <img src="{{ other_post.img_url }}" alt="Image" class="img-fluid rounded">
+                        <img src="{{ other_post.img_url }}" alt="Image" class="img-fluid rounded" width="150px">
                         <div class="col">
                           <h4 class="mb-0">{{other_post.title}} </h4>
                           <p class=" small text-body-secondary">{{other_post.date.strftime('%d/%m/%Y') }}</p>
                         </div>
                       </a>
                     </li>
+                      {% endif %}
                       {% endfor %}
                   </ul>
                 </div>
-                <div class="p-4 mb-3 bg-body-tertiary rounded">
+                  <!-- TO BLOG HOMEPAGE -->
+                  <div class="d-flex justify-content-end mb-4">
+                    <a class="btn btn-secondary text-uppercase" href="{{ url_for('blog')}}">todos os Posts →</a>
+                  </div>
+                <div class="p-4 mb-3 bg-body-tertiary rounded border-top border-bottom">
                     <h4 class="fst-italic">Sobre o Autor:</h4>
                     <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers, content, or something else entirely. Totally up to you.</p>
                 </div>

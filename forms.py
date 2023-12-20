@@ -54,3 +54,8 @@ class ContactForm(FlaskForm):
     name = StringField("Nome:", validators=[DataRequired()])
     email = StringField("Email:", validators=[DataRequired()])
     message = TextAreaField("Mensagem:", validators=[DataRequired()], render_kw={"rows": 7, "cols": 30})
+
+
+class SearchForm(FlaskForm):
+    busca = StringField("Busca:", validators=[DataRequired()])
+    submit = SubmitField("Buscar!")

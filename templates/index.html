@@ -68,7 +68,7 @@
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                  <h6>{{ post.category.name }}</h6>
+                  <h6 class="card-category-text">{{ post.category.name }}</h6>
                   <a href="{{ url_for('show_post', post_id=post.id) }}" class="">
                     <h3 class="card-title fst-italic">{{ post.title}}</h3>
                   </a>

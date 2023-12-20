@@ -9,25 +9,20 @@
         <div class="page-heading">
           <h1 class="post-heading">Inscreva-se</h1>
           <span class="subheading post-heading">Contribua com a nossa comunidade!</span>
-          
+            <!-- SIGN UP FORM -->
+          <div class="container py-5">
+            <div class="row my-4">
+              <div class="col-lg-8 col-md-10 mx-auto">
+                <!-- RENDER SIGN UP FORM AND SUBMIT BUTTON -->
+                   {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </header>
 
-<section class="section-register py-5">
-    <main class="mb-4">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <!-- RENDER SIGN UP FORM AND SUBMIT BUTTON -->
-               {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-          </div>
-        </div>
-      </div>
-    </main>
-
-</section>
 
 {% include "footer.html" %}

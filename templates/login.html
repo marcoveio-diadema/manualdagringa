@@ -11,36 +11,29 @@
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
           <h1 class="post-heading">Entrar</h1>
-          
           <span class="post-heading">Bem vindo de volta!</span>
+            <!-- LOGIN FORM -->
+            <div class="container py-4">
+            <div class="row">
+                <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+              {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <p class="flash">{{ message }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+              <div class="col-lg-8 col-md-10 py-5 mx-auto">
+                <!-- DISPLAY LOGIN FORM -->
+                  {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </header>
-
-<!-- SECTION LOG IN -->
-
-<section class="section-login py-5">
-    <main class="mb-4">
-      <div class="container">
-        <div class="row">
-            <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
-          {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        {% for message in messages %}
-                            <p class="flash">{{ message }}</p>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-          <div class="col-lg-8 col-md-10 mx-auto">
-            <!-- DISPLAY LOGIN FORM -->
-              {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-          </div>
-        </div>
-      </div>
-    </main>
-</section>
 
 
 {% include "footer.html" %}

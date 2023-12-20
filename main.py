@@ -9,9 +9,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import smtplib
 
 # import forms.py
-from forms import CommentForm, ContactForm, CategoryForm, CreatePostForm, LoginForm, RegisterForm, SubscribeForm
+from forms import CommentForm, ContactForm, CategoryForm, CreatePostForm, LoginForm, RegisterForm, SubscribeForm, SearchForm
 
-#import db.py
+# import db.py
 from db import db, User, BlogPost, Subscribe, Comment, Category, init_db
 
 
@@ -206,6 +206,30 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect(url_for('blog'))
+
+
+@app.context_processor
+def base():
+    form = SearchForm()
+    return dict(form=form)
+
+
+# SEARCH FOR A POST
+@app.route('/busca', methods=['POST'])
+def search():
+    form = SearchForm()
+
+    # search in the database:
+    posts_query = BlogPost.query
+
+    if form.validate_on_submit():
+        # get data from submitted form
+        busca = form.busca.data
+
+        # query the database
+        posts = posts_query.filter(BlogPost.body.like('%' + busca + '%')).order_by(BlogPost.title).all()
+
+        return render_template("search.html", form=form, busca=busca, posts=posts)
 
 
 @app.route('/category')
