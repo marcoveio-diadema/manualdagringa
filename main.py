@@ -62,8 +62,6 @@ def admin_only(func):
 
 @app.route('/')
 def home():
-    #result = db.session.execute(db.select(BlogPost))
-    #posts = result.scalars().all()
 
     posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
 
@@ -219,6 +217,10 @@ def base():
 def search():
     form = SearchForm()
 
+    # Fetch all unique categories
+    categories = db.session.query(Category.name).distinct().all()
+    categories = [category[0] for category in categories]
+
     # search in the database:
     posts_query = BlogPost.query
 
@@ -229,12 +231,24 @@ def search():
         # query the database
         posts = posts_query.filter(BlogPost.body.like('%' + busca + '%')).order_by(BlogPost.title).all()
 
-        return render_template("search.html", form=form, busca=busca, posts=posts)
+        return render_template("search.html", form=form, busca=busca, posts=posts, all_categories=categories)
 
 
-@app.route('/category')
-def blog_category():
-    return render_template("blog_category.html")
+@app.route('/category/<category_name>')
+def post_category(category_name):
+    # Fetch all unique categories
+    categories = db.session.query(Category.name).distinct().all()
+    categories = [category[0] for category in categories]
+
+    category = Category.query.filter_by(name=category_name).first()
+    # if no category
+    if category is None:
+        abort(404)  # or handle the case where the category is not found
+
+    # Fetch posts that belong to the selected category
+    posts = BlogPost.query.filter_by(category=category).all()
+
+    return render_template("blog_category.html", posts=posts, category_name=category_name, current_user=current_user, all_categories=categories)
 
 
 @app.route('/signup', methods=['GET', 'POST'])

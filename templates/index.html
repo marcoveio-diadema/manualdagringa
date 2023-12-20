@@ -58,7 +58,7 @@
 <!-- LATEST POST SECTION -->
 <section class="section latest-post">
     <div class="container py-4">
-        <h2>Tem post novo no blog!</h2>
+        <h2 class="mt-3">Tem post novo no blog!</h2>
         <div class="card latest-post-card my-5" style="max-width: 1200px;">
         {% for post in all_posts %}
              {% if loop.first %}
@@ -88,7 +88,7 @@
 <!-- OTHER POSTS SECTION -->
 <section class="section other-posts py-5">
     <div class="container px-3 px-lg-4">
-        <h2>Bombando no blog!</h2>
+        <h2>Outros assuntos no blog!</h2>
         <div class="row gx-3 gx-lg-4 my-4 justify-content-center">
             {% for post in all_posts[1:7] %}
             <!-- First Card -->

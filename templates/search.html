@@ -26,7 +26,7 @@
         <div class="col-lg-8">
             <h4 class="my-4">
                 Posts relacionados a:</h4>
-            <h3 class="pb-4 my-4 border-bottom fst-italic category-search-text">{{ busca }}<h3>
+            <h3 class="pb-4 my-4 border-bottom fst-italic category-search-text">{{ busca }}</h3>
             <!-- CHECK IF THERE ARE POSTS AND IF SO DISPLAY THEM -->
             {% if posts %}
             {% for post in posts %}
@@ -46,7 +46,6 @@
                           <a href="{{ url_for('sobre_nos')}}">{{post.author.name}}
                           </a> <br>
                           Data: {{post.date.strftime('%d/%m/%Y') }}
-                      </p>
                           <!-- DELETE POST IF ADM -->
                           {% if current_user.id == 1%}
                           <a href="#"> Delete post ✘</a>
@@ -91,22 +90,18 @@
             </div>
           </form>
             
-            
             <!-- SHOW CATEGORIES -->
-        <div class="card-body">
-            <h5 class="card-title mb-3">Por categoria:</h5>
-            <ul class="list-group my-1">
-                <li class="list-group-item">
-                    <a href="{{ url_for('blog_category')}}">category_name</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="{{ url_for('blog_category')}}">category_name</a>
-                </li>
-                <li class="list-group-item">
-                   <a href="{{ url_for('blog_category')}}">category_name</a>
-                </li>
-            </ul>
-        </div>
+            <div class="card-body">
+                <h5 class="card-title mb-3">Por categoria:</h5>
+                <ul class="list-group my-1">
+                    {% for category_name in all_categories %}
+                    <li class="list-group-item">
+                        <a href="{{ url_for('post_category', category_name=category_name) }}">{{ category_name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
         </div>
       </div>
     </div>

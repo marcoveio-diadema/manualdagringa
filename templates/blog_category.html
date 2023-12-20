@@ -19,79 +19,89 @@
 
 <!-- blog main content -->
 
-<section class="section-categories py-5">
+<section class="bg-light py-5">
     <div class="container mt-0 pt-3">
       <div class="row">
         <!-- Main Content (8 grids) -->
-        <div class="col-md-8">
-            <h3 class="pb-4 my-4 border-bottom">
-                Posts por categoria: category.name
-              </h3>
+        <div class="col-lg-8">
+            <h4 class="my-4">
+                Posts relacionados a:</h4>
+            <h3 class="pb-4 my-4 border-bottom fst-italic category-search-text">{{ posts[0].category.name }}</h3>
             <!-- CHECK IF THERE ARE POSTS AND IF SO DISPLAY THEM -->
-          <div class="card custom-card all-posts mb-3">
-            <div class="card-body">
-                 <a href="#">
-                      <h6 class="card-title">post.category_name </h6>
-                      <h3 class="card-subtitle mb-2">post.title</h3>
-                      <p class="card-text">post.subtitle</p>
-                 </a>
-                      <p class="small card-text">
-                          Posted by
-                          <a href="{{ url_for('sobre_nos')}}">post.author.name</a>
-                          on post.date
-                            <!-- delete post if adm -->
-                            <a href="#"> Delete ✘</a>
-                        </p>
-            </div>
+            {% if posts %}
+            {% for post in posts %}
+          <div class="card latest-post-card mb-3">
+              <div class="row my-3 mx-3 lg-8 rounded shadow">
+                  <div class="col-lg-4 pt-4">
+                      <img src="{{ post.img_url }}" class="card-img" alt="">
+                    </div>
+                  <div class="col-lg-4 pt-2">
+                      <div class="card-body">
+                        <a href="{{ url_for('show_post', post_id=post.id) }}">
+                          <h6 class="card-title card-category-text">{{post.category_name}}</h6>
+                          <h4 class="card-subtitle mb-2">{{post.title}}</h4>
+                          <p class="card-text small">{{post.intro}}</p>
+                      </a>
+                      <p class="small card-text search-card-text">Postado por:
+                          <a href="{{ url_for('sobre_nos')}}">{{post.author.name}}
+                          </a> <br>
+                          Data: {{post.date.strftime('%d/%m/%Y') }}
+                          <!-- DELETE POST IF ADM -->
+                          {% if current_user.id == 1%}
+                          <a href="#"> Delete post ✘</a>
+                          {% endif %}
+                      </p>
+                  </div>
+                  </div>
+              </div>
           </div>
-            
+            {% endfor %}
+            {% else %}
             <p>Nenhum post nessa categoria ainda.</p>
+            {% endif %}
             
             <!-- New Post if adm-->
-            
+             {% if current_user.id == 1 %}
           <div class="d-flex justify-content-end my-4">
             <a
               class="btn btn-primary float-right"
-              href="{{url_for('new_post')}}"
+              href="{{url_for('create_post')}}"
               >Create New Post</a
             >
           </div>
+                {% endif %}
           
         <!-- Pager-->
           <div class="d-flex justify-content-end mb-4">
-            <a class="btn btn-secondary text-uppercase" href="#!">Outros Posts ↓</a>
+            <a class="btn btn-secondary text-uppercase" href="{{ url_for('blog') }}">Outros Posts ↓</a>
           </div>
         </div>
     
-        <!-- Sidebar (4 grids) -->
-        <div class="col-md-4">
+        <!-- QUICK SEARCH THROUGH POSTS -->
+        <div class="col-lg-4">
             <h3 class="pb-4 my-4 border-bottom">
                 Busca rápida no blog:
               </h3>
-          <form class="my-4">
+          <form class="my-4" method="POST" action="{{ url_for('search')}}">
+              {{ form.hidden_tag() }}
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Busca rápida">
-              <button class="btn btn-outline-secondary" type="button">Buscar</button>
+              <input type="search" class="form-control" placeholder="Busca rápida" aria-label="Busca Rápida" name="busca">
+              <button class="btn btn-outline-secondary" type="submit">Buscar</button>
             </div>
           </form>
             
             
-            <!-- RECENT POSTS -->
-            <div class="p-4 mb-3">
-              <h4 class="fst-italic">Postagens recentes:</h4>
-              <ul class="list-unstyled border-bottom">
-                  <!-- FOR LOOP TO GET THE POSTS -->
-                <li>
-                  <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" href="#">
-                    <img src="https://picsum.photos/id/237/536/354" class="img-fluid" width="150px">
-                    <div class="col">
-                      <h4 class="mb-0">other_post.title </h4>
-                      <p class=" small text-body-secondary">other_post.date</p>
-                    </div>
-                  </a>
+            <!-- SHOW CATEGORIES -->
+        <div class="card-body">
+            <h5 class="card-title mb-3">Por categoria:</h5>
+            <ul class="list-group my-1">
+                {% for category_name in all_categories %}
+                <li class="list-group-item">
+                    <a href="{{ url_for('post_category', category_name=category_name)}}">{{category_name}}</a>
                 </li>
-              </ul>
-            </div>
+                {% endfor %}
+            </ul>
+        </div>
         </div>
       </div>
     </div>
