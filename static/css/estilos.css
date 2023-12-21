@@ -34,7 +34,27 @@ p, span, ul, li {
     text-shadow: #F05454 0 0 2px; !important;
 }
 
+.index-form {
+    border-radius: 10px !important;
+}
+
+.btn-index-nav {
+    background-color: #30475E !important;
+    color: white !important;
+}
+
 /* INDEX PAGE - FEATURES SECTION */
+
+.index-page-form {
+    border-radius: 12px !important;
+}
+@media only screen and (min-width: 1000px) {
+    .index-page-form {
+    min-width: 700px !important;
+    }
+}
+
+
 .features {
     background-color: #30475E;
 }
@@ -72,7 +92,7 @@ p, span, ul, li {
 }
 
 .search-card-text {
-    font-size: 0.5em !important
+    font-size: 0.6em !important
 }
 
 .category-search-text {

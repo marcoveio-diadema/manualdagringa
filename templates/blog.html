@@ -39,9 +39,9 @@
                           <h3 class="card-subtitle mb-2">{{post.title}}</h3>
                           <p class="card-text">{{post.intro}}</p>
                       </a>
-                      <p class="small card-text">Postado por
+                      <p class="small card-text">Por:
                           <a href="{{ url_for('sobre_nos')}}">{{post.author.name}}
-                          </a>, {{post.date.strftime('%d/%m/%Y') }}
+                          </a><br>Data: {{post.date.strftime('%d/%m/%Y') }}
                           <!-- DELETE POST IF ADM -->
                           {% if current_user.id == 1%}
                           <a href="#"> Delete post ✘</a>

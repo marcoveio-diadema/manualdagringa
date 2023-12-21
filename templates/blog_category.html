@@ -42,7 +42,7 @@
                           <h4 class="card-subtitle mb-2">{{post.title}}</h4>
                           <p class="card-text small">{{post.intro}}</p>
                       </a>
-                      <p class="small card-text search-card-text">Postado por:
+                      <p class="small card-text">Por:
                           <a href="{{ url_for('sobre_nos')}}">{{post.author.name}}
                           </a> <br>
                           Data: {{post.date.strftime('%d/%m/%Y') }}

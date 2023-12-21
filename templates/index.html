@@ -20,6 +20,15 @@
 <!-- FEATURES SECTION -->
 
 <section class="section features">
+    <div class="container px-4 py-3 d-flex justify-content-center border-bottom">
+        <form class="my-2 index-page-form" method="POST" action="{{ url_for('search')}}">
+              {{ form.hidden_tag() }}
+            <div class="input-group">
+              <input type="search" class="form-control" placeholder="Busca rápida" aria-label="Busca Rápida" name="busca">
+              <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+            </div>
+          </form>
+    </div>
     <div class="container px-4">
         <div class="row g-4 py-4 row-cols-1 row-cols-lg-3">
           <div class="feature col">
@@ -139,15 +148,13 @@
         <div class="col-md-8 index-page-form py-4 rounded px-4">
           <h2>Sign up for our Newsletter</h2>
           <p>Get the latest updates and news delivered straight to your inbox.</p>
-          
-          <!-- Newsletter Form -->
-          <form class="">
+             <!-- Newsletter Form -->
+          <form class="my-4" method="#" action="#">
               <div class="form-group gx-3 gx-lg-4 my-3">
-                <label for="email">Email address:</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                <input type="email" class="form-control" placeholder="Digite seu email" aria-label="Digite seu email" name="inscreva-se">
               </div>
               <div class="container d-flex justify-content-end px-5">
-                <button type="submit" class="btn btn-custom">Subscribe</button>
+                <button type="submit" class="btn btn-custom">Se inscrever!</button>
               </div>
           </form>
         </div>

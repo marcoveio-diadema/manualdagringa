@@ -8,24 +8,49 @@
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div>
           <h1 class="post-heading">{{post.title}}</h1>
-          <h2 class="subheading post-heading">{{post.intro}}</h2>
-          <span class="meta post-heading fst-italic"
-            >Escrito por
-            <a href="{{ url_for('sobre_nos')}}" class="post-heading">{{post.author.name}} </a>
-            em {{post.date}}
-          </span>
         </div>
       </div>
     </div>
   </div>
 </header>
 
-<!-- POST CONTENT -->
+<!-- ARTICLE CONTENT -->
 <section class="section-show-post py-5">
     <article>
       <div class="container px-2 justify-content-center">
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-8 col-lg-6 col-xl-8 px-5 bg-white rounded">
+              <h2 class="subheading mt-3">{{post.intro}}</h2>
+              <!-- META AND SHARE ICONS -->
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                  <span class="meta fst-italic">Escrito por
+                    <a href="{{ url_for('sobre_nos')}}" class="">{{post.author.name}} </a>
+                    em {{post.date.strftime('%d/%m/%Y')}}
+                  </span>
+                    <!-- Social Media Icons -->
+                    <div class="d-flex">
+                        <!-- WhatsApp -->
+                        <a href="whatsapp://send?text={{post.intro}} - {{ url_for('show_post', post_id=post.id, _external=True) }}"
+                           class="me-3" title="Compartilhar no WhatsApp" >
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+            
+                        <!-- Facebook -->
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url_for('show_post', post_id=post.id, _external=True) }}"
+                           class="me-3" title="Compartilhar no Facebook" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+            
+                        <!-- Twitter -->
+                        <a href="https://twitter.com/intent/tweet?url={{ url_for('show_post', post_id=post.id, _external=True) }}&text={{post.intro}}"
+                           class="me-3" title="Compartilhar no Twitter" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+
+              <hr class="w-80">
+              <!-- POST CONTENT -->
               <p>
                   {{ post.body|safe }}
               </p>
@@ -44,6 +69,14 @@
             <!-- Comments Area -->
               {{ ckeditor.load() }} {{ ckeditor.config(name='comment_text') }}
               {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+              
+              <!-- SHOW AND GO TO CATEGORY PAGE -->
+              <div class="container">
+                    <p class="list-group-item">Mais posts sobre:
+                        <a href="{{ url_for('post_category', category_name=post.category.name) }}">{{ post.category.name }}</a>
+                    </p>
+              </div>
+             
               
             <div class="comment">
               <!-- Show all the comments on a post -->

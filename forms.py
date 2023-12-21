@@ -39,7 +39,7 @@ class LoginForm(FlaskForm):
 
 # CommentForm so users can leave comments below posts
 class CommentForm(FlaskForm):
-    comment_text = TextAreaField("Deixa o seu comentário abaixo", validators=[DataRequired()], render_kw={"rows": 5, "cols": 30})
+    comment_text = TextAreaField("Deixe o seu comentário abaixo", validators=[DataRequired()], render_kw={"rows": 5, "cols": 30})
     submit = SubmitField("Enviar!")
 
 

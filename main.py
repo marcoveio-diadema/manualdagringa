@@ -17,7 +17,7 @@ from db import db, User, BlogPost, Subscribe, Comment, Category, init_db
 
 # FLASK CONFIGURATION
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donTGtgK86gTihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = 'SECRET-KEY-HERE'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 ckeditor = CKEditor(app)
 Bootstrap5(app)
@@ -62,7 +62,6 @@ def admin_only(func):
 
 @app.route('/')
 def home():
-
     posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
 
     return render_template("index.html", all_posts=posts, current_user=current_user)
@@ -84,6 +83,10 @@ def blog():
 def show_post(post_id):
     # current post
     requested_post = db.get_or_404(BlogPost, post_id)
+
+    # Fetch all unique categories
+    categories = db.session.query(Category.name).distinct().all()
+    categories = [category[0] for category in categories]
 
     # other posts
     other_posts = BlogPost.query.filter(BlogPost.id != post_id).order_by(BlogPost.date.desc()).all()
@@ -111,7 +114,7 @@ def show_post(post_id):
     comments = Comment.query.filter_by(post_id=post_id).all()
 
     return render_template("post.html", post=requested_post, current_user=current_user,
-                           form=comment_form, comments=comments, other_posts=other_posts)
+                           form=comment_form, comments=comments, other_posts=other_posts, all_categories=categories)
 
 
 @app.route("/delete-comment/<int:comment_id>", methods=["GET", "POST"])
@@ -317,6 +320,10 @@ def login():
     return render_template("login.html", form=form)
 
 
+#TODO - Subscribe route
+
+
+#TODO - Contact form to email
 @app.route('/contato')
 def contato():
     return render_template("contato.html")
