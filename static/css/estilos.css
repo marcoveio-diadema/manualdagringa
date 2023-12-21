@@ -179,3 +179,9 @@ p, span, ul, li {
     color: #30475E
 }
 
+/* ADMIN PAGE */
+#header-adm {
+    height: 300px! important;
+    background-color: #30475E
+}
+
