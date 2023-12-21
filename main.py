@@ -60,11 +60,12 @@ def admin_only(func):
     return decorated_function
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
+    form = SubscribeForm()
     posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
 
-    return render_template("index.html", all_posts=posts, current_user=current_user)
+    return render_template("index.html", all_posts=posts, current_user=current_user, form=form)
 
 
 @app.route('/blog')
@@ -76,7 +77,10 @@ def blog():
     # Fetch all posts
     posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
 
-    return render_template("blog.html", all_posts=posts, all_categories=categories, current_user=current_user)
+    # subscribe form
+    subscribe_form = SubscribeForm()
+
+    return render_template("blog.html", all_posts=posts, all_categories=categories, current_user=current_user, form=subscribe_form)
 
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
@@ -321,6 +325,37 @@ def login():
 
 
 #TODO - Subscribe route
+
+# Define the new route for processing the form
+@app.route('/subscribe', methods=['POST', 'GET'])
+def subscribe():
+    # fetch all posts
+    posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
+
+    # form
+    form = SubscribeForm()
+
+    if form.validate_on_submit():
+        # check if already registerd
+        email = form.email.data
+        result = db.session.execute(db.select(Subscribe).where(Subscribe.email == email))
+        subscribed_user = result.scalar()
+
+        if subscribed_user:
+            # User already exists
+            flash("Email já esta cadastrado, use outro!")
+            return redirect(url_for('subscribe'))
+
+        # Create a new Names instance and add it to the database
+        new_subscriber = Subscribe(
+            email=form.email.data
+        )
+
+        db.session.add(new_subscriber)
+        db.session.commit()
+
+        return redirect(url_for('home'))
+    return render_template("index.html", form=form, all_posts=posts)
 
 
 

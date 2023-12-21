@@ -1,4 +1,5 @@
 {% include "header.html" %}
+{% from "bootstrap5/form.html" import render_form %}
 
 <!-- Page Header-->
 <header
@@ -139,24 +140,36 @@
     <div class="container px-3 px-lg-4">
       <div class="row gx-3 gx-lg-4 d-flex align-items-center justify-content-center">
         <!-- Column 1: Logo and Text -->
-        <div class="col-md-4">
+        <div class="col-md-4 text-center">
           <img src="{{ url_for('static', filename='assets/img/manual_logo.png') }}" alt="Logo" class="img-fluid" width="300px">
           <p id="subscribe-text">O mundo agora está ao seu alcance!</p>
         </div>
     
         <!-- Column 2: Newsletter Signup -->
-        <div class="col-md-8 index-page-form py-4 rounded px-4">
-          <h2>Sign up for our Newsletter</h2>
-          <p>Get the latest updates and news delivered straight to your inbox.</p>
+        <div class="col-md-8 index-page-form py-4 rounded px-4 text-center">
+          <h2>Se inscreva na nossa newsletter</h2>
+          <p>Receba todas as nossas novidades direto no seu email!</p>
+            <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+              {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible fade show d-flex justify-content-center" role="alert">
+                               <span class="mx-5">{{ message }}</span>
+                              <button type="button" class="btn-danger close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
              <!-- Newsletter Form -->
-          <form class="my-4" method="#" action="#">
-              <div class="form-group gx-3 gx-lg-4 my-3">
-                <input type="email" class="form-control" placeholder="Digite seu email" aria-label="Digite seu email" name="inscreva-se">
-              </div>
-              <div class="container d-flex justify-content-end px-5">
-                <button type="submit" class="btn btn-custom">Se inscrever!</button>
-              </div>
-          </form>
+             
+            <form method="POST" action="{{ url_for('subscribe') }}">
+                {{ form.hidden_tag() }}
+                {{ form.email.label }}
+                {{ form.email }}
+                <button type="submit" class="btn btn-custom mx-5 my-3">Confirmar!</button>
+            </form>
         </div>
       </div>
     </div>

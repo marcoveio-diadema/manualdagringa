@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, TextAreaField, SelectField
+from wtforms import StringField, SubmitField, PasswordField, TextAreaField, SelectField, EmailField
 from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditorField
 from flask_ckeditor.fields import CKEditorField
@@ -19,20 +19,20 @@ class CreatePostForm(FlaskForm):
 # RegisterForm to register new users
 class RegisterForm(FlaskForm):
     name = StringField("Nome:", validators=[DataRequired()])
-    email = StringField("Email:", validators=[DataRequired()])
+    email = EmailField("Email:", validators=[DataRequired()])
     password = PasswordField("Senha:", validators=[DataRequired()])
     submit = SubmitField("Confirmar!")
 
 
 # SubscribeForm to get users emails
 class SubscribeForm(FlaskForm):
-    email = StringField("Email:", validators=[DataRequired()])
+    email = EmailField("Email:", validators=[DataRequired()])
     submit = SubmitField("Receber Newsletter!")
 
 
 # LoginForm to login existing users
 class LoginForm(FlaskForm):
-    email = StringField("Email:", validators=[DataRequired()])
+    email = EmailField("Email:", validators=[DataRequired()])
     password = PasswordField("Password:", validators=[DataRequired()])
     submit = SubmitField("Entrar!")
 
@@ -52,7 +52,7 @@ class CategoryForm(FlaskForm):
 # ContactForm so users can contact us
 class ContactForm(FlaskForm):
     name = StringField("Nome:", validators=[DataRequired()])
-    email = StringField("Email:", validators=[DataRequired()])
+    email = EmailField("Email:", validators=[DataRequired()])
     message = TextAreaField("Mensagem:", validators=[DataRequired()], render_kw={"rows": 7, "cols": 30})
 
 

@@ -72,9 +72,9 @@
     
         <!-- QUICK SEARCH THROUGH POSTS -->
         <div class="col-lg-4">
-            <h3 class="pb-4 my-4 border-bottom">
+            <h4 class="py-4 my-4 border-top">
                 Busca rápida no blog:
-              </h3>
+              </h4>
           <form class="my-4" method="POST" action="{{ url_for('search')}}">
               {{ form.hidden_tag() }}
             <div class="input-group">
@@ -84,7 +84,7 @@
           </form>
           <!-- SHOW CATEGORIES -->
             <div class="card-body">
-                <h5 class="card-title mb-3">Por categoria:</h5>
+                <h4 class="card-title py-4 my-4 border-top">Por categoria:</h4>
                 <ul class="list-group my-1">
                     {% for category_name in all_categories %}
                     <li class="list-group-item">
@@ -93,6 +93,32 @@
                     {% endfor %}
                 </ul>
             </div>
+            
+            <!-- NEWSLETTER FORM -->
+            <h4 class="pt-4 mt-4 border-top">Se inscreva na nossa newsletter</h4>
+              <p>Receba todas as nossas novidades direto no seu email!</p>
+                <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+                  {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger alert-dismissible fade show d-flex justify-content-center" role="alert">
+                                   <span class="mx-5">{{ message }}</span>
+                                  <button type="button" class="btn-danger close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                 <!-- Newsletter Form -->
+                 
+                <form method="POST" action="{{ url_for('subscribe') }}" class="text-center">
+                    {{ form.hidden_tag() }}
+                    {{ form.email.label }}
+                    {{ form.email }}
+                    <button type="submit" class="btn btn-custom mx-5 my-3">Confirmar!</button>
+                </form>
+            <hr>
         
         </div>
       </div>
