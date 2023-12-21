@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from flask import Flask, abort, render_template, redirect, url_for, flash
+from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_gravatar import Gravatar
 from flask_ckeditor import CKEditor
@@ -323,9 +323,29 @@ def login():
 #TODO - Subscribe route
 
 
+
+MY_EMAIL = "SOME_MAIL"
+MY_PASSWORD = "SOME PASSWORD"
+
+
 #TODO - Contact form to email
-@app.route('/contato')
+@app.route('/contato', methods=['POST', 'GET'])
 def contato():
+    if request.method == 'POST':
+        name = request.form.get("name")
+        email = request.form.get("email")
+        message = request.form.get("message")
+
+        flash("Obrigado pela mensagem, responderemos em breve!")
+
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(user=MY_EMAIL, password=MY_PASSWORD)
+            connection.sendmail(
+                from_addr=MY_EMAIL,
+                to_addrs="SOME_RECEIVER",
+                msg=f"Subject:Novo contato! \n\n Email sent by:{name}\nEmail:{email}\nMensagem:\n{message}")
+
     return render_template("contato.html")
 
 

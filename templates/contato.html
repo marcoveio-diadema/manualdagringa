@@ -24,6 +24,19 @@
       <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-10 col-lg-8 col-xl-7">
+              <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+              {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+                           <span class="mx-5">{{ message }}</span>
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+             {% endwith %}
             <p>
               Entre em contato para dicas, reclamações e possíveis parcerias também!
             </p>
@@ -39,23 +52,21 @@
                   <label for="email">Email address</label>
                 </div>
                 <div class="form-floating">
-                  <input class="form-control" id="phone" name="phone" type="tel" placeholder="Seu telefone..." />
-                  <label for="phone">Phone Number</label>
-                </div>
-                <div class="form-floating">
                   <textarea class="form-control" id="message" name="message" placeholder="Sua mensagem aqui..." required
                     style="height: 12rem"></textarea>
                   <label for="message">Message</label>
                 </div>
                 <br />
-                <button class="btn btn-custom text-uppercase" id="submitButton" type="submit">Enviar!</button>
+                <button class="btn btn-custom text-uppercase" id="submitButton" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">Enviar!</button>
               </form>
             </div>
           </div>
         </div>
       </div>
     </main>
-
 </section>
+
+
+
 
 {% include "footer.html" %}
