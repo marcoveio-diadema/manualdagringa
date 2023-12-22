@@ -1,8 +1,10 @@
 from datetime import date, datetime
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
+from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap5
 from flask_gravatar import Gravatar
 from flask_ckeditor import CKEditor
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -19,11 +21,14 @@ from db import db, User, BlogPost, Subscribe, Comment, Category, init_db
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SECRET-KEY-HERE'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
+
 # load db config
 init_db(app)
+
 
 
 # Create an instance of LoginManager
@@ -397,7 +402,7 @@ def logout():
 
 # ADMIN ROUTE:
 @app.route('/admin')
-@admin_only
+# @admin_only
 def admin():
     return render_template("admin.html")
 
@@ -414,6 +419,10 @@ def page_not_found(e):
 def page_not_found(e):
     return render_template("500.html"), 500
 
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+
 

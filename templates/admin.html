@@ -15,18 +15,67 @@
   </div>
 </header>
 
-<section class="section-sobre py-5">
-    <main class="mb-4">
-      <div class="container px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-          <div class="col-md-10 col-lg-8 text-center">
-              <hr>
-                <p> testing </p>
-              <hr>
+<section class="section-admin py-5">
+    <div class="container mt-5">
+    <div class="row">
+      <div class="col-lg-12">
+        <h2>Admin Panel</h2>
+        <hr>
+
+        <div class="row">
+            <!-- get sent to new post -->
+          <div class="col-md-6 col-lg-3 mb-3 mb-sm-0">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Novo post</h5>
+                <p class="card-text">Clique aqui para criar um novo post.</p>
+                   <div class="mt-auto d-flex justify-content-end">
+                    <a href="#" class="btn btn-primary">→</a>
+                  </div>
+              </div>
+            </div>
+          </div>
+            <!-- all posts list -->
+          <div class="col-md-6 col-lg-3">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Todos os posts</h5>
+                <p class="card-text">Clique para abrir tabela com lista de todos os posts.</p>
+                  <div class="mt-auto d-flex justify-content-end">
+                    <a href="#" class="btn btn-primary">→</a>
+                  </div>
+              </div>
+            </div>
+          </div>
+            <!-- lista de usuarios -->
+            <div class="col-md-6 col-lg-3">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">All users in DB</h5>
+                <p class="card-text">Clique para abrir tabela com lista de todos os usuarios.</p>
+                 <div class="mt-auto d-flex justify-content-end">
+                    <a href="#" class="btn btn-primary">→</a>
+                  </div>
+              </div>
+            </div>
+          </div>
+            <!-- newsletter subscribers -->
+            <div class="col-md-6 col-lg-3">
+            <div class="card h-100">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Assinantes newsletter</h5>
+                <p class="card-text">Clique para abrir tabela com lista de emails para newsletter.</p>
+                   <div class="mt-auto d-flex justify-content-end">
+                    <a href="#" class="btn btn-primary">→</a>
+                  </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
+  </div>
+  
 </section>
 
 {% include "footer.html" %}
