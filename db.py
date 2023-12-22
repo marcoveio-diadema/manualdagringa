@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
 from sqlalchemy import func
@@ -70,14 +69,6 @@ class Category(db.Model):
 class Subscribe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-
-
-class OtherPost(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    image_path = db.Column(db.String(100))
-
 
 
 # CREATE ALL DB

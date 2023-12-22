@@ -1,5 +1,7 @@
-{% include "header.html" %}
+{% extends "base.html" %}
+{% block title %}Blog{% endblock%}
 
+{% block content %}
 <!-- Page Header-->
 <header
   class="masthead mb-0"
@@ -113,7 +115,7 @@
                  <!-- Newsletter Form -->
                  
                 <form method="POST" action="{{ url_for('subscribe') }}" class="text-center">
-                    {{ form.hidden_tag() }}
+                    {{ form.hidden_tag() }}                   
                     {{ form.email.label }}
                     {{ form.email }}
                     <button type="submit" class="btn btn-custom mx-5 my-3">Confirmar!</button>
@@ -127,4 +129,4 @@
 
 
 
-{% include "footer.html" %}
+{% endblock %}

@@ -1,5 +1,8 @@
 
-{% include "header.html" %}
+{% extends "base.html" %}
+{% block title %}Error 500{% endblock%}
+
+{% block content %}
 
 <!-- Page Header -->
 <header
@@ -23,4 +26,4 @@
 </header>
 
 
-{% include "footer.html" %}
+{% endblock %}

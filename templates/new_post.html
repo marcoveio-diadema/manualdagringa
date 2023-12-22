@@ -1,6 +1,8 @@
 {% from "bootstrap5/form.html" import render_form %}
-{% include "header.html" %}
+{% extends "base.html" %}
+{% block title %}Novo Post{% endblock%}
 
+{% block content %}
 <!-- Page Header -->
 <header class="masthead" style="background-image: url('../static/assets/img/sunrise_angkorwat.jpeg')">
   <div class="container position-relative px-4 px-lg-5">
@@ -39,4 +41,4 @@
     </main>
 </section>
 
-{% include "footer.html" %}
+{% endblock %}

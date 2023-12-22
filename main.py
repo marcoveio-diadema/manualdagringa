@@ -1,6 +1,5 @@
 from datetime import date, datetime
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
-from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap5
 from flask_gravatar import Gravatar
 from flask_ckeditor import CKEditor
@@ -28,8 +27,6 @@ Bootstrap5(app)
 
 # load db config
 init_db(app)
-
-
 
 # Create an instance of LoginManager
 login_manager = LoginManager(app)

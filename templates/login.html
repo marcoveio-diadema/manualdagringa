@@ -1,5 +1,8 @@
 {% from "bootstrap5/form.html" import render_form %}
-{% include "header.html" %}
+{% extends "base.html" %}
+{% block title %}Login{% endblock%}
+
+{% block content %}
 
 <!-- Page Header -->
 <header
@@ -41,4 +44,4 @@
 </header>
 
 
-{% include "footer.html" %}
+{% endblock %}

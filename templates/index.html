@@ -1,6 +1,8 @@
-{% include "header.html" %}
+{% extends "base.html" %}
 {% from "bootstrap5/form.html" import render_form %}
+{% block title %}Home{% endblock%}
 
+{% block content %}
 <!-- Page Header-->
 <header
   class="masthead border-bottom border-white"
@@ -183,5 +185,5 @@
     </div>
 </section>
 
+{% endblock %}
 
-{% include "footer.html" %}
