@@ -4,16 +4,17 @@ from flask_bootstrap import Bootstrap5
 from flask_gravatar import Gravatar
 from flask_ckeditor import CKEditor
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from sqlalchemy.orm import relationship
+from sqlalchemy import func
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
 from functools import wraps
+from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import smtplib
 
 # import forms.py
 from forms import CommentForm, ContactForm, CategoryForm, CreatePostForm, LoginForm, RegisterForm, SubscribeForm, SearchForm
-
-# import db.py
-from db import db, User, BlogPost, Subscribe, Comment, Category, init_db
 
 
 # FLASK CONFIGURATION
@@ -21,12 +22,90 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'SECRET-KEY-HERE'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+# CK EDITOR AND BOOTSTRAP
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
 
-# load db config
-init_db(app)
+# MODELS
+# user model
+class User(UserMixin, db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(100))
+    name = db.Column(db.String(150))
+
+    # This will act like a List of BlogPost objects attached to each User.
+    # The "author" refers to the author property in the BlogPost class.
+    posts = relationship("BlogPost", back_populates="author")
+    comments = relationship("Comment", back_populates="comment_author")
+
+    def __repr__(self):
+        return '<Name %r>' % self.name
+
+
+# new post model
+class BlogPost(db.Model):
+    __tablename__ = "blog_posts"
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Create Foreign Key, "users.id" the users refers to the tablename of User.
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    # Create reference to the User object, the "posts" refers to the posts property in the User class.
+    author = relationship("User", back_populates="posts")
+    comments = relationship("Comment", back_populates="parent_post")
+
+    title = db.Column(db.String(150), unique=True, nullable=False)
+    intro = db.Column(db.String(250), nullable=False)
+    slug = db.Column(db.String(150), nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+    body = db.Column(db.Text, nullable=False)
+    img_url = db.Column(db.String(500), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    category = db.relationship('Category', backref=db.backref('posts', lazy=True))
+
+    @property
+    def author_name(self):
+        return self.user.name if self.user else None
+
+
+# comments model
+class Comment(db.Model):
+    __tablename__ = "comments"
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    posted_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    # Child relationship with the tablename of User.
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    comment_author = relationship("User", back_populates="comments")
+    # Child relationship with the tablename of BlogPost.
+    post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
+    parent_post = relationship("BlogPost", back_populates="comments")
+
+# category model
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+
+
+# subscribe model
+class Subscribe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+
+# best color model
+class BestColor(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    color = db.Column(db.String(120), unique=True, nullable=False)
+
+# create db
+with app.app_context():
+    db.create_all()
+
 
 # Create an instance of LoginManager
 login_manager = LoginManager(app)
