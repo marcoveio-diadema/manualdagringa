@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_gravatar import Gravatar
@@ -9,7 +9,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import func
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
 from functools import wraps
-from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import smtplib
 
@@ -97,10 +96,6 @@ class Subscribe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
-# best color model
-class BestColor(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    color = db.Column(db.String(120), unique=True, nullable=False)
 
 # create db
 with app.app_context():
@@ -126,6 +121,11 @@ gravatar = Gravatar(app,
 @login_manager.user_loader
 def load_user(user_id):
     return db.get_or_404(User, user_id)
+
+
+@app.route('/test')
+def test_route():
+    return 'Hello, this is a test route!'
 
 
 # ADMIN DECORATOR FUNCTION

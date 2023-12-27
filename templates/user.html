@@ -1,0 +1,32 @@
+{% extends "base.html"%}
+{% block title %}Login{% endblock%}
+
+{% block content %}
+<!-- Page Header-->
+<header
+  class="masthead border-bottom border-white user-admin-header" 
+  style="background-image: url('../static/assets/img/background3.jpg')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-left">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+            <!-- MESSAGE WHEN REGESTERING SUCCESSFULLY -->
+            {% for message in get_flashed_messages() %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      {{ message }}
+                    <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                    </button>
+                  </div>
+                {% endfor %}
+          <h1 class="features-text user-h1">Olá, {{user.name|title}}</h1>
+          <span class="subheading features-text">O mundo agora está ao seu alcance!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- user section -->
+
+{% endblock%}
