@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.orm import relationship
 from sqlalchemy import func
-from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
+from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 import smtplib
@@ -122,10 +122,6 @@ gravatar = Gravatar(app,
 def load_user(user_id):
     return db.get_or_404(User, user_id)
 
-
-@app.route('/test')
-def test_route():
-    return 'Hello, this is a test route!'
 
 
 # ADMIN DECORATOR FUNCTION
@@ -350,7 +346,7 @@ def sign_up():
 
         if user:
             # User already exists
-            flash("You've already signed up with that email, log in instead!")
+            flash("Email ja cadastrado, faça o seu login.")
             return redirect(url_for('login'))
 
         # hash and salt password
@@ -373,7 +369,8 @@ def sign_up():
         # Log in and authenticate user after adding details to database.
         login_user(new_user)
 
-        return redirect(url_for('home'))
+        flash("Bem vindo a nossa comunidade!")
+        return redirect(url_for('user', name=new_user.name))
 
     return render_template("sign_up.html", form=form)
 
@@ -400,14 +397,26 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
-            return redirect(url_for('home'))
+
+             # Redirect based on user ID
+            if user.id == 1:  # Admin user ID, adjust as needed
+                return redirect(url_for('admin'))
+            else:
+                return redirect(url_for('user', name=user.name))
+            
     # if methods == GET
     return render_template("login.html", form=form)
 
 
-#TODO - Subscribe route
+@app.route('/user/<name>')
+@login_required
+def user(name):
+    return render_template('user.html', name=name)
 
-# Define the new route for processing the form
+
+
+
+# NEWSLETTER SUBSCRIBE ROUTE
 @app.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
     # fetch all posts
@@ -439,12 +448,12 @@ def subscribe():
     return render_template("index.html", form=form, all_posts=posts)
 
 
+# CONTACT ROUTE
 
 MY_EMAIL = "SOME_MAIL"
 MY_PASSWORD = "SOME PASSWORD"
 
 
-#TODO - Contact form to email
 @app.route('/contato', methods=['POST', 'GET'])
 def contato():
     if request.method == 'POST':
@@ -478,9 +487,18 @@ def logout():
 
 # ADMIN ROUTE:
 @app.route('/admin')
-# @admin_only
+@admin_only
 def admin():
-    return render_template("admin.html")
+    # fetch all posts
+    posts = BlogPost.query.all()
+
+    # fetch all users
+    users = User.query.all()
+
+    # fetch all subscribers
+    subscribers = Subscribe.query.all()
+
+    return render_template("admin.html", posts=posts, users=users, subscribers=subscribers)
 
 # CUSTOM ERROR PAGES:
 

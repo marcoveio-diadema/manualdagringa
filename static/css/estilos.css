@@ -31,7 +31,7 @@ p, span, ul, li {
 /* HEADER */
 
 #landing-page-h1 {
-    text-shadow: #F05454 0 0 2px; !important;
+    text-shadow: #F05454 0 0 2px !important;
 }
 
 .index-form {
@@ -41,6 +41,10 @@ p, span, ul, li {
 .btn-index-nav {
     background-color: #30475E !important;
     color: white !important;
+}
+
+.user-admin-header {
+    height: 500px !important;
 }
 
 /* INDEX PAGE - FEATURES SECTION */
@@ -103,7 +107,7 @@ p, span, ul, li {
 /* INDEX PAGE - SUBSCRIBE SECTION */
 
 .section-subscribe {
-    background-color: #30475E; !important;
+    background-color: #30475E !important;
 }
 
 .index-page-form {
@@ -190,6 +194,7 @@ p, span, ul, li {
 }
 
 
+
  /* Adjust the background image properties */
     .parallax-container {
         position: relative;
@@ -220,6 +225,6 @@ p, span, ul, li {
     }
 
 #parallax-text {
-    text-shadow: #30475E 0 0 4px; !important;
-    color: #F5F5F5 !important
+    text-shadow: #30475E 0 0 4px !important;
+    color: #F5F5F5 !important;
 }

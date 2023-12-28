@@ -33,7 +33,7 @@
                 <h5 class="card-title">Novo post</h5>
                 <p class="card-text">Clique aqui para criar um novo post.</p>
                    <div class="mt-auto d-flex justify-content-end">
-                    <a href="#" class="btn btn-primary">→</a>
+                    <a href="{{url_for('create_post')}}" class="btn btn-primary">→</a>
                   </div>
               </div>
             </div>
@@ -79,6 +79,91 @@
     </div>
   </div>
   
+</section>
+
+<section class="admin-details-section py-3">
+  <div class="container px-4 py-3 admin-table">
+    <h3 class="text-center pb-3">Todos os posts</h3>
+    <table class="table table-striped py-3">
+      <thead>
+        <tr>
+          <th scope="col">Post id</th>
+          <th scope="col">Title</th>
+          <th scope="col">Date</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post in posts %}
+        <tr>
+          <th scope="row">{{ post.id }}</th>
+          <td>{{ post.title}}</td>
+          <td>{{ post.date.strftime('%Y-%m-%d') }}</td>
+          <td>
+            <a href="{{ url_for('edit_post', post_id=post.id) }}">Edit</a>
+            <span>/</span>
+            <a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <hr>
+</section>
+
+<!-- SECTION USERS -->
+<section class="admin-details-section">
+  <div class="container admin-table px-4 py-3">
+    <h3 class="text-center pb-3">Todos os usuarios</h3>
+    <table class="table table-striped py-3">
+      <thead>
+        <tr>
+          <th scope="col">User id</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Email</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <th scope="row">{{ user.id }}</th>
+          <td>{{ user.name}}</td>
+          <td>{{ user.email }}</td>
+          <td> 01/01/0000 </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <hr>
+</section>
+
+<!-- SECTION SUBSCRIBERS -->
+<section class="admin-details-section">
+  <div class="container px-4 py-3 admin-table">
+    <h3 class="text-center pb-3">Todos os subscribers</h3>
+    <table class="table table-striped py-3">
+      <thead>
+        <tr>
+          <th scope="col">Subscriber id</th>
+          <th scope="col">Email</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for subscriber in subscribers %}
+        <tr>
+          <th scope="row">{{ subscriber.id }}</th>
+          <td>{{ subscriber.email }}</td>
+          <td> 00/00/0000 </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <hr>
 </section>
 
 {% endblock %}
