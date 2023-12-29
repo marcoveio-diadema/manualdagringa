@@ -37,6 +37,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(150))
+    #username = name = db.Column(db.String(150), unique=True)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
     # This will act like a List of BlogPost objects attached to each User.
     # The "author" refers to the author property in the BlogPost class.
@@ -45,6 +47,11 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<Name %r>' % self.name
+    
+    # Add the is_admin property
+    @property
+    def is_admin(self):    
+        return self.id == 1 
 
 
 # new post model
@@ -95,6 +102,7 @@ class Category(db.Model):
 class Subscribe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 # create db
@@ -129,7 +137,7 @@ def admin_only(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         # Check if the current user is logged in and has ID 1
-        if current_user.id == 1:
+        if current_user.is_authenticated and current_user.is_admin:
             return func(*args, **kwargs)
         else:
             abort(403)  # HTTP 403 Forbidden error
@@ -199,20 +207,27 @@ def show_post(post_id):
 
 
 @app.route("/delete-comment/<int:comment_id>", methods=["GET", "POST"])
+@login_required
 def delete_comment(comment_id):
     comment_to_delete = Comment.query.get(comment_id)
 
     if comment_to_delete:
         # Check if the current user is the author of the comment
-        if current_user.is_authenticated and current_user.id == comment_to_delete.comment_author.id:
+        if current_user.is_authenticated and (current_user.id == comment_to_delete.comment_author.id or current_user.is_admin):
             db.session.delete(comment_to_delete)
             db.session.commit()
-            flash("Comment deleted successfully.")
+            # flash("Comment deleted successfully.")
         else:
             abort(403)  # Forbidden
+        
+        # Check if the delete request came from the admin template
+    if "from_admin" in request.args and request.args["from_admin"] == "true":
+        # Redirect back to the admin page
+        return redirect(url_for("admin"))
+    else:
+        # Redirect back to the post page
+        return redirect(url_for("show_post", post_id=comment_to_delete.post_id))
 
-    # Redirect back to the post page
-    return redirect(url_for("show_post", post_id=comment_to_delete.post_id))
 
 
 @app.route('/new_post', methods=['GET', 'POST'])
@@ -370,7 +385,7 @@ def sign_up():
         login_user(new_user)
 
         flash("Bem vindo a nossa comunidade!")
-        return redirect(url_for('user', name=new_user.name))
+        return redirect(url_for('user', user_id=new_user.id, name=current_user.name))
 
     return render_template("sign_up.html", form=form)
 
@@ -402,16 +417,48 @@ def login():
             if user.id == 1:  # Admin user ID, adjust as needed
                 return redirect(url_for('admin'))
             else:
-                return redirect(url_for('user', name=user.name))
+                return redirect(url_for('user', user_id=user.id, name=current_user.name))
             
     # if methods == GET
     return render_template("login.html", form=form)
 
 
-@app.route('/user/<name>')
+
+# USER PAGE
+@app.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
-def user(name):
-    return render_template('user.html', name=name)
+def user(user_id):
+     # get users database
+    user = db.get_or_404(User, user_id)
+
+    # get register form
+    edit_user_form = RegisterForm(
+        email = user.email,
+        name = user.name,
+        password = user.password
+    )
+
+    if edit_user_form.validate_on_submit():
+
+         # hash and salt password
+        hash_and_salted_edited_password = generate_password_hash(
+            edit_user_form.password.data,
+            method='pbkdf2:sha256',
+            salt_length=8
+        )
+
+        user.email = edit_user_form.email.data
+        user.name = edit_user_form.name.data
+        user.password = hash_and_salted_edited_password
+
+        # save changes to db
+        db.session.commit()
+
+        # message to confirm update
+        flash('Dados atualizados com sucesso!')
+        return redirect( url_for('user', user_id=user.id))
+    
+    return render_template("user.html", form=edit_user_form, current_user=current_user, name=current_user.name)
 
 
 
@@ -489,6 +536,9 @@ def logout():
 @app.route('/admin')
 @admin_only
 def admin():
+     # Fetch all comments
+    comments = Comment.query.all()
+
     # fetch all posts
     posts = BlogPost.query.all()
 
@@ -498,7 +548,7 @@ def admin():
     # fetch all subscribers
     subscribers = Subscribe.query.all()
 
-    return render_template("admin.html", posts=posts, users=users, subscribers=subscribers)
+    return render_template("admin.html", posts=posts, users=users, subscribers=subscribers, comments=comments)
 
 # CUSTOM ERROR PAGES:
 

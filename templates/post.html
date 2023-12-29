@@ -96,7 +96,7 @@
                         {{comment.posted_date.strftime('%B %d, %Y')}}
                         by <strong>{{comment.comment_author.name}} </strong></span>
                       <!-- ALLOW TO DELETE COMMENT IF SAME USER WHO CREATED AND IS LOGGED IN -->
-                      {% if current_user.is_authenticated and current_user.id == comment.comment_author.id %}
+                      {% if current_user.is_authenticated and current_user.id == comment.comment_author.id or current_user.id == 1 %}
                       <span>
                           <a href="{{ url_for('delete_comment', comment_id=comment.id) }}" class="btn btn-link text-danger"> Delete </a>
                       </span>

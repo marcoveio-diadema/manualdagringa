@@ -1,4 +1,5 @@
 {% extends "base.html"%}
+{% from "bootstrap5/form.html" import render_form %}
 {% block title %}Login{% endblock%}
 
 {% block content %}
@@ -19,7 +20,7 @@
                     </button>
                   </div>
                 {% endfor %}
-          <h1 class="features-text user-h1">Olá, {{name|title}}</h1>
+          <h1 class="features-text user-h1">Olá, {{ name|title}}</h1>
           <span class="subheading features-text">O mundo agora está ao seu alcance!</span>
           <br>
           <div class="container">
@@ -32,5 +33,28 @@
 </header>
 
 <!-- user section -->
+
+<section class="user-profile-section">
+  <div class="container py-5">
+    <div class="row my-4">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+              <span class="mx-5">{{ message }}</span>
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <!-- RENDER SIGN UP FORM AND SUBMIT BUTTON -->
+            {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        </div>
+    </div>
+  </div>
+</section>
 
 {% endblock%}
