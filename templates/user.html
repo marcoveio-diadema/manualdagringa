@@ -32,23 +32,38 @@
   </div>
 </header>
 
-<!-- user section -->
-
-<section class="user-profile-section">
-  <div class="container py-5">
-    <div class="row my-4">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-          <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
-              <span class="mx-5">{{ message }}</span>
-            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+<!-- user details section -->
+<section class="user-details-section">
+  <div class="container py-3 my-3">
+    <div class="card mb-3">
+      <div class="row g-0">        
+        <div class="col-md-4">
+          <img src="{{ url_for('static', filename='assets/img/profile_pic.png')}}" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title mt-2">Nome: {{ current_user.name }}</h5>
+            <p class="card-text"> <strong>Usuário: </strong> {{ current_user.username }}
+              <br> <strong> Email: </strong> {{ current_user.email }}
+              <br> <strong>Membro desde:</strong> {{ current_user.date.strftime('%d-%m-%Y') }}
+            </p>
+            <div class="container">
+              <a class="btn btn-custom btn-sm mx-2" href="#">Editar Perfil</a>
+              <a class="btn btn-danger btn-sm mx-2" href="{{url_for('delete_user', user_id=current_user.id)}}">Deletar Perfil</a>
+            </div>        
           </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- update profile section -->
+
+<section class="update-profile-section py-3">
+  <div class="container py-3 my-2 shadow">
+    <div class="row my-4">
+      <h4 class="py-3 text-center">Precisa atualizar o seu perfil?</h4>
         <div class="col-lg-8 col-md-10 mx-auto">
           <!-- RENDER SIGN UP FORM AND SUBMIT BUTTON -->
             {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}

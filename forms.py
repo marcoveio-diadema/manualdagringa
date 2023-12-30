@@ -19,6 +19,7 @@ class CreatePostForm(FlaskForm):
 # RegisterForm to register new users
 class RegisterForm(FlaskForm):
     name = StringField("Nome:", validators=[DataRequired()])
+    username = StringField("Nome de usuário", validators=[DataRequired()])
     email = EmailField("Email:", validators=[DataRequired()])
     password = PasswordField("Senha:", validators=[DataRequired()])
     submit = SubmitField("Confirmar!")
@@ -32,7 +33,7 @@ class SubscribeForm(FlaskForm):
 
 # LoginForm to login existing users
 class LoginForm(FlaskForm):
-    email = EmailField("Email:", validators=[DataRequired()])
+    username = StringField("Nome de Usuário:", validators=[DataRequired()])
     password = PasswordField("Password:", validators=[DataRequired()])
     submit = SubmitField("Entrar!")
 

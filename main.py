@@ -37,7 +37,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(150))
-    #username = name = db.Column(db.String(150), unique=True)
+    username = db.Column(db.String(150), unique=True)
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
     # This will act like a List of BlogPost objects attached to each User.
@@ -144,7 +144,7 @@ def admin_only(func):
 
     return decorated_function
 
-
+#INDEX
 @app.route('/', methods=['GET', 'POST'])
 def home():
     form = SubscribeForm()
@@ -152,7 +152,7 @@ def home():
 
     return render_template("index.html", all_posts=posts, current_user=current_user, form=form)
 
-
+# BLOG 
 @app.route('/blog')
 def blog():
     # Fetch all unique categories
@@ -167,7 +167,7 @@ def blog():
 
     return render_template("blog.html", all_posts=posts, all_categories=categories, current_user=current_user, form=subscribe_form)
 
-
+# SHOW POST
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def show_post(post_id):
     # current post
@@ -205,7 +205,7 @@ def show_post(post_id):
     return render_template("post.html", post=requested_post, current_user=current_user,
                            form=comment_form, comments=comments, other_posts=other_posts, all_categories=categories)
 
-
+# DELETE COMMENT
 @app.route("/delete-comment/<int:comment_id>", methods=["GET", "POST"])
 @login_required
 def delete_comment(comment_id):
@@ -229,7 +229,7 @@ def delete_comment(comment_id):
         return redirect(url_for("show_post", post_id=comment_to_delete.post_id))
 
 
-
+# CREATE NEW POST
 @app.route('/new_post', methods=['GET', 'POST'])
 @admin_only
 def create_post():
@@ -261,7 +261,7 @@ def create_post():
 
     return render_template("new_post.html", form=form, current_user=current_user)
 
-
+# EDIT POST
 @app.route('/edit-post/<int:post_id>', methods=['GET', 'POST'])
 @admin_only
 def edit_post(post_id):
@@ -295,7 +295,7 @@ def edit_post(post_id):
         return redirect(url_for('show_post', post_id=post.id))
     return render_template("new_post.html", form=edit_form, is_edit=True, current_user=current_user, categories=categories)
 
-
+# DELETE POST
 @app.route('/delete-post/<int:post_id>')
 @admin_only
 def delete_post(post_id):
@@ -304,7 +304,7 @@ def delete_post(post_id):
     db.session.commit()
     return redirect(url_for('blog'))
 
-
+# CONTEXT FUNCTION FOR SEARCH
 @app.context_processor
 def base():
     form = SearchForm()
@@ -332,7 +332,7 @@ def search():
 
         return render_template("search.html", form=form, busca=busca, posts=posts, all_categories=categories)
 
-
+# POSTS PER CATEGORY
 @app.route('/category/<category_name>')
 def post_category(category_name):
     # Fetch all unique categories
@@ -349,7 +349,7 @@ def post_category(category_name):
 
     return render_template("blog_category.html", posts=posts, category_name=category_name, current_user=current_user, all_categories=categories)
 
-
+# REGISTER ROUTE
 @app.route('/signup', methods=['GET', 'POST'])
 def sign_up():
     form = RegisterForm()
@@ -373,6 +373,7 @@ def sign_up():
 
         new_user = User(
             name = form.name.data,
+            username = form.username.data,
             email = form.email.data,
             password = hash_and_salted_password,
         )
@@ -389,23 +390,23 @@ def sign_up():
 
     return render_template("sign_up.html", form=form)
 
-
+# LOGIN ROUTE
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
 
     if form.validate_on_submit():
         # retrieve data from form
-        email = form.email.data
+        username = form.username.data
         password = form.password.data
 
         # find user in User DB by email entered
-        result = db.session.execute(db.Select(User).where(User.email == email))
+        result = db.session.execute(db.Select(User).where(User.username == username))
         user = result.scalar()
 
         # check if login details are correct
         if not user:
-            flash("Email não encontrado, tente novamente.")
+            flash("Usuario não encontrado, tente novamente.")
             return redirect(url_for('login'))
         elif not check_password_hash(user.password, password):
             flash("Senha incorreta, tente novamente.")
@@ -435,7 +436,8 @@ def user(user_id):
     edit_user_form = RegisterForm(
         email = user.email,
         name = user.name,
-        password = user.password
+        username = user.username,
+        password = user.password,
     )
 
     if edit_user_form.validate_on_submit():
@@ -449,6 +451,7 @@ def user(user_id):
 
         user.email = edit_user_form.email.data
         user.name = edit_user_form.name.data
+        user.username = edit_user_form.data
         user.password = hash_and_salted_edited_password
 
         # save changes to db
@@ -461,6 +464,43 @@ def user(user_id):
     return render_template("user.html", form=edit_user_form, current_user=current_user, name=current_user.name)
 
 
+# DELETE USER
+@app.route('/delete-user/<int:user_id>')
+def delete_user(user_id):
+    # fetch user to be deleted
+    user_to_delete = db.get_or_404(User, user_id)
+
+    # Only administrators can delete other users
+    if current_user.is_admin and current_user.id != user_to_delete.id:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash('User deleted successfully!')
+        return redirect(url_for('admin'))
+    
+    # Users can delete their own account
+    elif current_user.id == user_to_delete.id:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash('Que pena te ver partir, volte quando quiser!')
+
+         # Log out the user after deleting the account
+        logout_user()
+        
+        return redirect(url_for('home'))
+    
+    # If it's neither an admin deleting another user nor a user deleting their own account, return a forbidden error
+    else:
+        abort(403)
+
+
+# DELETE SUBSCRIBER
+@app.route('/delete-subscriber/<int:subscriber_id>')
+@admin_only
+def delete_subscriber(subscriber_id):
+    subscriber_to_delete = db.get_or_404(Subscribe, subscriber_id)
+    db.session.delete(subscriber_to_delete)
+    db.session.commit()
+    return redirect(url_for('admin'))
 
 
 # NEWSLETTER SUBSCRIBE ROUTE
@@ -527,6 +567,7 @@ def sobre_nos():
 
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
@@ -562,6 +603,11 @@ def page_not_found(e):
 @app.errorhandler(500)
 def page_not_found(e):
     return render_template("500.html"), 500
+
+# Internal server error
+@app.errorhandler(403)
+def page_not_found(e):
+    return render_template("403.html"), 403
 
 
 
