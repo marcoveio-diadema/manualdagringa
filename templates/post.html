@@ -23,7 +23,7 @@
       <div class="container px-2 justify-content-center">
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-8 col-lg-6 col-xl-8 px-5 bg-white rounded">
-              <h2 class="subheading mt-3">{{post.intro}}</h2>
+              <h4 class="subheading mt-3">{{post.intro}}</h4>
               <!-- META AND SHARE ICONS -->
               <div class="d-flex justify-content-between align-items-center mt-3">
                   <span class="meta fst-italic">Escrito por
@@ -57,6 +57,7 @@
               <p>
                   {{ post.body|safe }}
               </p>
+              <hr>
             <!-- ONLY SHOW EDIT BUTTON IF USER ID 1 (ADMIN USER) -->
               {% if current_user.id == 1 %}
             <div class="d-flex justify-content-center mb-4">
@@ -72,21 +73,14 @@
             <!-- Comments Area -->
               {{ ckeditor.load() }} {{ ckeditor.config(name='comment_text') }}
               {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-              
-              <!-- SHOW AND GO TO CATEGORY PAGE -->
-              <div class="container">
-                    <p class="list-group-item">Mais posts sobre:
-                        <a href="{{ url_for('post_category', category_name=post.category.name) }}">{{ post.category.name }}</a>
-                    </p>
-              </div>
-             
+                
               
             <div class="comment">
               <!-- Show all the comments on a post -->
               <ul class="commentList">
                   <!-- Show all comments -->
                   {% for comment in post.comments | sort(attribute='posted_date', reverse=True) %}
-                <li>
+                <li class="border rounded">
                   <div class="commenterImage">
                     <img src="{{comment.comment_author.email | gravatar}}" />
                   </div>
@@ -106,23 +100,33 @@
                   {% endfor %}
               </ul>
             </div>
+
+            <hr>
+
+              <!-- SHOW AND GO TO CATEGORY PAGE -->
+              <div class="container">
+                <p class="list-group-item">Mais posts sobre:
+                    <a href="{{ url_for('post_category', category_name=post.category.name) }}">{{ post.category.name }}</a>
+                </p>
+              </div>
+         
           </div>
             <!-- SIDE DIV WITH OTHER POSTS -->
             <div class="col-md-4 col-lg-4">
               <div class="position-sticky" style="top: 2rem;">
-                <div class="p-4 mb-3">
+                <div class="p-4 mb-1">
                   <h4 class="fst-italic">Postagens recentes:</h4>
-                  <ul class="list-unstyled border-bottom">
+                  <ul class="list-unstyled">
                       <!-- LOOP THROUGH OTHER POSTS -->
                       {% for other_post in other_posts %}
                       {% if loop.index <= 5 %}
-                    <li>
-                      <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top"
+                    <li class="bg-white py-1 px-1 rounded">
+                      <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-2 link-body-emphasis text-decoration-none"
                          href="{{ url_for('show_post', post_id=other_post.id) }}">
-                        <img src="{{ other_post.img_url }}" alt="Image" class="img-fluid rounded" width="150px">
+                        <img src="{{ other_post.img_url }}" alt="Image" class="img-fluid rounded mx-auto d-bloc" width="150px">
                         <div class="col">
-                          <h4 class="mb-0">{{other_post.title}} </h4>
-                          <p class=" small text-body-secondary">{{other_post.date.strftime('%d/%m/%Y') }}</p>
+                          <h6 class="mb-0 text-center">{{other_post.title}} </h6>
+                          <p class="text-center small text-body-secondary">{{other_post.date.strftime('%d/%m/%Y') }}</p>
                         </div>
                       </a>
                     </li>
@@ -136,7 +140,11 @@
                   </div>
                 <div class="p-4 mb-3 bg-body-tertiary rounded border-top border-bottom">
                     <h4 class="fst-italic">Sobre o Autor:</h4>
-                    <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers, content, or something else entirely. Totally up to you.</p>
+                    <div class="text center">
+                      <img src="{{ url_for ('static', filename='assets/img/marcus_1.jpg')}}" class="img-fluid rounded">
+                    </div>
+                    <p class="small mb-0">
+                      Nascido na periferia de São Paulo, minha jornada começou aos 22 anos, quando uma oportunidade me levou à Austrália por 5 meses, estendendo-se para 5 anos de estudo, trabalho e descobertas. Explorando mais de 40 países, encontrei minha esposa na Nova Zelândia. Agora, residindo na França, compartilho minha experiência neste blog, incentivando outros a explorarem o mundo com esforço e foco. Com ênfase no visto férias trabalho, este espaço oferece tudo o necessário para iniciar uma jornada transformadora. Junte-se a mim nessa aventura global de superação e descobertas!</p>
                 </div>
               </div>
             </div>

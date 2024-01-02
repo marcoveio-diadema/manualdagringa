@@ -149,6 +149,10 @@ p, span, ul, li {
     background-color: #F5F5F5 !important;
 }
 
+.sign-up-header {
+    max-height: 400px !important;
+}
+
 /* LOGIN PAGE */
 
 .section-login {

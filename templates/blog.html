@@ -34,12 +34,12 @@
                   <div class="col-lg-4 pt-4">
                       <img src="{{ post.img_url }}" class="card-img" alt="">
                     </div>
-                  <div class="col-lg-4 pt-2">
+                  <div class="col pt-2">
                       <div class="card-body">
                       <a href="{{ url_for('show_post', post_id=post.id) }}">
                           <h6 class="card-title card-category-text">{{post.category.name}}</h6>
-                          <h3 class="card-subtitle mb-2">{{post.title}}</h3>
-                          <p class="card-text">{{post.intro}}</p>
+                          <h5 class="card-subtitle mb-2">{{post.title}}</h5>
+                          {{ post.intro[:50] }}{{ '...' if post.intro|length > 50 else '' }}
                       </a>
                       <p class="small card-text">Por:
                           <a href="{{ url_for('sobre_nos')}}">{{post.author.name}}

@@ -12,6 +12,7 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 import smtplib
 
+
 # import forms.py
 from forms import CommentForm, ContactForm, CategoryForm, CreatePostForm, LoginForm, RegisterForm, SubscribeForm, SearchForm
 
@@ -116,9 +117,9 @@ login_manager.login_view = 'login'  # Specify the login view endpoint
 
 # For adding profile images to the comment section
 gravatar = Gravatar(app,
-                    size=100,
+                    size=200,
                     rating='g',
-                    default='retro',
+                    default='robohash',
                     force_default=False,
                     force_lower=False,
                     use_ssl=False,
@@ -349,6 +350,17 @@ def post_category(category_name):
 
     return render_template("blog_category.html", posts=posts, category_name=category_name, current_user=current_user, all_categories=categories)
 
+
+# DELETE CATEOGRY
+@app.route('/delete-category/<int:category_id>')
+@admin_only
+def delete_category(category_id):
+    category_to_delete = db.get_or_404(Category, category_id)
+    db.session.delete(category_to_delete)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+
 # REGISTER ROUTE
 @app.route('/signup', methods=['GET', 'POST'])
 def sign_up():
@@ -454,6 +466,7 @@ def user(user_id):
         user.username = edit_user_form.data
         user.password = hash_and_salted_edited_password
 
+
         # save changes to db
         db.session.commit()
 
@@ -461,7 +474,7 @@ def user(user_id):
         flash('Dados atualizados com sucesso!')
         return redirect( url_for('user', user_id=user.id))
     
-    return render_template("user.html", form=edit_user_form, current_user=current_user, name=current_user.name)
+    return render_template("user.html", form=edit_user_form, current_user=current_user, name=current_user.name, gravatar=gravatar)
 
 
 # DELETE USER
@@ -485,7 +498,7 @@ def delete_user(user_id):
 
          # Log out the user after deleting the account
         logout_user()
-        
+
         return redirect(url_for('home'))
     
     # If it's neither an admin deleting another user nor a user deleting their own account, return a forbidden error
@@ -574,7 +587,7 @@ def logout():
 
 
 # ADMIN ROUTE:
-@app.route('/admin')
+@app.route('/admin', methods=['GET', 'POST'])
 @admin_only
 def admin():
      # Fetch all comments
@@ -589,7 +602,26 @@ def admin():
     # fetch all subscribers
     subscribers = Subscribe.query.all()
 
-    return render_template("admin.html", posts=posts, users=users, subscribers=subscribers, comments=comments)
+    # fetch all categories
+    categories = Category.query.all()
+
+     # Create a form for adding a new category
+    form = CategoryForm()
+
+    if form.validate_on_submit():
+         # Check if the category already exists
+        existing_category = Category.query.filter_by(name=form.name.data).first()
+        if existing_category:
+            flash('Category already exists.', 'danger')
+        else:
+            # Add a new category if it doesn't exist
+            new_category = Category(name=form.name.data)
+            db.session.add(new_category)
+            db.session.commit()
+            flash('Category added successfully.', 'success')
+        return redirect(url_for('admin'))
+
+    return render_template("admin.html", posts=posts, users=users, subscribers=subscribers, comments=comments, categories=categories, form=form)
 
 # CUSTOM ERROR PAGES:
 

@@ -12,14 +12,6 @@
     <div class="row gx-4 gx-lg-5 justify-content-left">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="site-heading">
-            <!-- MESSAGE WHEN REGESTERING SUCCESSFULLY -->
-            {% for message in get_flashed_messages() %}
-                  <div class="alert alert-success alert-dismissible fade show" role="alert">
-                      {{ message }}
-                    <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                    </button>
-                  </div>
-                {% endfor %}
           <h1 class="features-text user-h1">Olá, {{ name|title}}</h1>
           <span class="subheading features-text">O mundo agora está ao seu alcance!</span>
           <br>
@@ -34,15 +26,25 @@
 
 <!-- user details section -->
 <section class="user-details-section">
-  <div class="container py-3 my-3">
-    <div class="card mb-3">
+  <div class="container py-3 my-3 col-md-8 col-lg-7">
+    <!-- MESSAGE WHEN REGESTERING SUCCESSFULLY -->
+    
+    <div class="container">
+      {% for message in get_flashed_messages() %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- CARD WITH USER DETAILS -->
+    <div class="card mb-3 shadow">
       <div class="row g-0">        
-        <div class="col-md-4">
-          <img src="{{ url_for('static', filename='assets/img/profile_pic.png')}}" class="img-fluid rounded-start" alt="...">
-        </div>
-        <div class="col-md-8">
+        <div class="col px-3 py-2">
           <div class="card-body">
-            <h5 class="card-title mt-2">Nome: {{ current_user.name }}</h5>
+            <h5 class="card-title mt-2">Nome: {{ current_user.name | title }}</h5>
             <p class="card-text"> <strong>Usuário: </strong> {{ current_user.username }}
               <br> <strong> Email: </strong> {{ current_user.email }}
               <br> <strong>Membro desde:</strong> {{ current_user.date.strftime('%d-%m-%Y') }}
@@ -53,6 +55,9 @@
             </div>        
           </div>
         </div>
+        <div class="col d-flex justify-content-end">
+          <img src="{{ gravatar(current_user.email) }}" class="img-fluid rounded-start align-items-end" alt="User Profile">
+        </div>
       </div>
     </div>
   </div>
@@ -61,7 +66,7 @@
 <!-- update profile section -->
 
 <section class="update-profile-section py-3">
-  <div class="container py-3 my-2 shadow">
+  <div class="container py-3 my-2 shadow bg-white">
     <div class="row my-4">
       <h4 class="py-3 text-center">Precisa atualizar o seu perfil?</h4>
         <div class="col-lg-8 col-md-10 mx-auto">
