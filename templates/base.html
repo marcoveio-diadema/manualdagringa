@@ -62,32 +62,34 @@
           Menu
           <i class="fas fa-bars"></i>
         </button>
+
+
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ms-auto py-4 py-lg-0">
               <li class="nav-item">
               <a
                 class="nav-link px-lg-2 py-3 py-lg-4"
                 href="{{ url_for ('blog')}}"
-                >Blog</a>
-              
+                >Blog</a>              
             </li>
-             <!-- <li class="nav-item">
+            <li class="nav-item">
               <a
                 class="nav-link px-lg-3 py-3 py-lg-4"
-                href=#"
+                href="{{ url_for('forum')}}"
                 >Forum</a
               >
-            </li>-->
-              <!-- show admin page if adm is logged-in -->
-              {% if current_user.id == 1 %}
-              <li class="nav-item">
-              <a
-                class="nav-link px-lg-2 py-3 py-lg-4"
-                href="{{ url_for('admin')}}"
-                >Admin</a
-              >
             </li>
-              {% endif %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle px-lg-2 py-3 py-lg-4" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Mais
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{{ url_for('contato') }}">Contato</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('sobre_nos') }}">Sobre Nós</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('faqs') }}">FAQ's</a></li>
+              </ul>
+            </li>
+              
              <!-- Only show Login/Register if user is logged out. Otherwise, show "Log Out" -->
               {% if not current_user.is_authenticated: %}
             <li class="nav-item">
@@ -105,33 +107,34 @@
               >
             </li>
               {% else: %}
-            <li class="nav-item">
-              <a
-                class="nav-link px-lg-2 py-3 py-lg-4"
-                href="{{ url_for('logout')}}"
-                >Sair</a
-              >
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle px-lg-2 py-3 py-lg-4" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ current_user.name }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{{ url_for('user', user_id=current_user.id) }}">Perfil</a></li>
+                <!-- show admin page if adm is logged-in -->
+                {% if current_user.id == 1 %}
+                <li><a class="dropdown-item" href="{{ url_for('admin')}}">Admin</a></li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ url_for('logout')}}">Sair</a></li>
+              </ul>
             </li>
+           
             {% endif %}
-            <li class="nav-item">
-              <a
-                class="nav-link px-lg-2 py-3 py-lg-4"
-                href="{{ url_for('contato')}}"
-                >Contato</a
-              >
-            </li>
           </ul>
         </div>
           <!-- QUICK SEARCH FORM -->
-          <form class="d-flex d-none d-lg-block position-relative" method="POST" action="{{ url_for('search')}}">
-            {{ form.hidden_tag() }}
-            <div class="input-group index-form">
-                <input type="search" class="form-control" placeholder="Busca rápida" aria-label="Busca Rápida" name="busca">
-                <button class="btn btn-index-nav btn-sm text-uppercase border" type="submit">
-                    <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
-                </button>
-            </div>
-          </form>
+        <form class="d-flex d-none d-lg-block position-relative justify-content-center align-items-center" method="POST" action="{{ url_for('search')}}">
+          {{ form.hidden_tag() }}
+          <div class="input-group index-form">
+              <input type="search" class="form-control" placeholder="Busca rápida" aria-label="Busca Rápida" name="busca">
+              <button class="btn btn-index-nav btn-sm text-uppercase border" type="submit">
+                  <i class="fas fa-search"></i> <!-- Font Awesome search icon -->
+              </button>
+          </div>
+        </form>
       </div>
     </nav>
     

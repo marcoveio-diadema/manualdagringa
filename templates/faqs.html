@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Sobre Nós{% endblock%}
+
+{% block content %}
+<!-- Page Header-->
+<header
+  class="masthead"
+  style="background-image: url('../static/assets/img/poonhill.jpeg')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1 class="features-text">Perguntas e Respostas</h1>
+          <span class="subheading features-text">Guia rapido de perguntas e respostas.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section-sobre py-5">
+    <main class="mb-4">
+      <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 text-center">
+            <h4>Perguntas frequentes:</h4>
+              <hr>
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        1. O que é um visto de férias-trabalho?
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                     <span>O visto de férias-trabalho é um tipo de visto que permite que os visitantes explorem um país enquanto trabalham temporariamente para financiar sua estadia.</span>
+                    </div>
+                  </div>
+                </div>
+                
+        
+              </div>
+          </div>
+        </div>
+      </div>
+    </main>
+</section>
+
+{% endblock%}

@@ -356,6 +356,17 @@ def post_category(category_name):
     return render_template("blog_category.html", posts=posts, category_name=category_name, current_user=current_user, all_categories=categories)
 
 
+# FORUM
+@app.route('/forum')
+def forum():
+    return render_template("forum_index.html")
+
+
+# FAQS PAGE
+@app.route('/faqs')
+def faqs():
+    return render_template('faqs.html')
+
 # DELETE CATEOGRY
 @app.route('/delete-category/<int:category_id>')
 @admin_only
