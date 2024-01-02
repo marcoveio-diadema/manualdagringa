@@ -36,7 +36,7 @@
                     </div>
                   <div class="col pt-2">
                       <div class="card-body">
-                      <a href="{{ url_for('show_post', post_id=post.id) }}">
+                      <a href="{{ url_for('show_post', post_id=post.id, slug=post.slug) }}">
                           <h6 class="card-title card-category-text">{{post.category.name}}</h6>
                           <h5 class="card-subtitle mb-2">{{post.title}}</h5>
                           {{ post.intro[:50] }}{{ '...' if post.intro|length > 50 else '' }}
@@ -46,7 +46,7 @@
                           </a><br>Data: {{post.date.strftime('%d/%m/%Y') }}
                           <!-- DELETE POST IF ADM -->
                           {% if current_user.id == 1%}
-                          <a href="#"> Delete post ✘</a>
+                          <a href="{{ url_for('delete_post', post_id=post.id)}}"> Delete post ✘</a>
                           {% endif %}
                       </p>
                   </div>

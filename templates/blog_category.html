@@ -39,7 +39,7 @@
                     </div>
                   <div class="col pt-2">
                       <div class="card-body">
-                        <a href="{{ url_for('show_post', post_id=post.id) }}">
+                        <a href="{{ url_for('show_post', post_id=post.id, slug=post.slug) }}">
                           <h6 class="card-title card-category-text">{{post.category_name}}</h6>
                           <h4 class="card-subtitle mb-2">{{post.title}}</h4>
                           <p class="card-text small">{{post.intro}}</p>

@@ -33,19 +33,19 @@
                     <!-- Social Media Icons -->
                     <div class="d-flex">
                         <!-- WhatsApp -->
-                        <a href="whatsapp://send?text={{post.intro}} - {{ url_for('show_post', post_id=post.id, _external=True) }}"
+                        <a href="whatsapp://send?text={{post.intro}} - {{ url_for('show_post', post_id=post.id, slug=post.slug, _external=True) }}"
                            class="me-3" title="Compartilhar no WhatsApp" >
                             <i class="fab fa-whatsapp"></i>
                         </a>
             
                         <!-- Facebook -->
-                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url_for('show_post', post_id=post.id, _external=True) }}"
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url_for('show_post', post_id=post.id, slug=post.slug, _external=True) }}"
                            class="me-3" title="Compartilhar no Facebook" target="_blank">
                             <i class="fab fa-facebook"></i>
                         </a>
             
                         <!-- Twitter -->
-                        <a href="https://twitter.com/intent/tweet?url={{ url_for('show_post', post_id=post.id, _external=True) }}&text={{post.intro}}"
+                        <a href="https://twitter.com/intent/tweet?url={{ url_for('show_post', post_id=post.id, slug=post.slug, _external=True) }}&text={{post.intro}}"
                            class="me-3" title="Compartilhar no Twitter" target="_blank">
                             <i class="fab fa-twitter"></i>
                         </a>
@@ -63,10 +63,10 @@
             <div class="d-flex justify-content-center mb-4">
                 <!-- edit post -->
               <a class="btn btn-primary float-right mx-2"
-                href="{{ url_for('edit_post', post_id=post.id)}}">Edit Post</a>
+                href="{{ url_for('edit_post', post_id=post.id, slug=post.slug)}}">Edit Post</a>
                 <!-- ONLY SHOW DELETE BUTTON IF USER ID 1 (ADMIN USER) -->
                 <a class="btn btn-danger float-right mx-2"
-                href="{{ url_for('delete_post', post_id=post.id)}}">Delete Post</a>
+                href="{{ url_for('delete_post', post_id=post.id, slug=post.slug)}}">Delete Post</a>
             </div>
               {% endif %}
             
@@ -82,7 +82,7 @@
                   {% for comment in post.comments | sort(attribute='posted_date', reverse=True) %}
                 <li class="border rounded">
                   <div class="commenterImage">
-                    <img src="{{comment.comment_author.email | gravatar}}" />
+                    <img src="{{comment.comment_author.email | gravatar}}">
                   </div>
                   <div class="commentText">
                       <p>{{comment.text|safe}} </p>
@@ -122,7 +122,7 @@
                       {% if loop.index <= 5 %}
                     <li class="bg-white py-1 px-1 rounded">
                       <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-2 link-body-emphasis text-decoration-none"
-                         href="{{ url_for('show_post', post_id=other_post.id) }}">
+                         href="{{ url_for('show_post', post_id=other_post.id, slug=post.slug) }}">
                         <img src="{{ other_post.img_url }}" alt="Image" class="img-fluid rounded mx-auto d-bloc" width="150px">
                         <div class="col">
                           <h6 class="mb-0 text-center">{{other_post.title}} </h6>

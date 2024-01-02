@@ -81,12 +81,12 @@
             <div class="col-md-8">
               <div class="card-body">
                   <h6 class="card-category-text">{{ post.category.name }}</h6>
-                  <a href="{{ url_for('show_post', post_id=post.id) }}" class="">
+                  <a href="{{ url_for('show_post', post_id=post.id, slug=post.slug) }}" class="">
                     <h3 class="card-title fst-italic">{{ post.title}}</h3>
                   </a>
                     <p class="card-text">{{ post.intro }}</p>
                   <div class="mt-auto d-flex justify-content-end mb-4">
-                    <a href="{{ url_for('show_post', post_id=post.id) }}" class="btn btn-custom text-uppercase">Continue lendo</a>
+                    <a href="{{ url_for('show_post', post_id=post.id, slug=post.slug) }}" class="btn btn-custom text-uppercase">Continue lendo</a>
                   </div>
               </div>
             </div>
@@ -113,7 +113,7 @@
             {% for post in all_posts[1:7] %}
             <!-- First Card -->
             <div class="col-md-6 col-lg-4 mb-4">
-                <a href="{{ url_for('show_post', post_id=post.id) }}" class="index-page-card-link">
+                <a href="{{ url_for('show_post', post_id=post.id, slug=post.slug) }}" class="index-page-card-link">
                     <div class="card card-main-posts h-100">
                         <img src="{{ post.img_url }}" class="card-img-top img-fluid" alt="Photo 1">
                         <div class="card-body d-flex flex-column">
@@ -122,7 +122,7 @@
                             <p class="card-text">{{post.intro}}
                             </p>
                             <div class="mt-auto d-flex justify-content-end mb-4">
-                                <a href="{{ url_for('show_post', post_id=post.id) }}" class="btn btn-custom text-uppercase">Ler mais <strong>→</strong></a>
+                                <a href="{{ url_for('show_post', post_id=post.id, slug=post.slug) }}" class="btn btn-custom text-uppercase">Ler mais <strong>→</strong></a>
                             </div>
                         </div>
                     </div>

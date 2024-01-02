@@ -1,16 +1,15 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, TextAreaField, SelectField, EmailField
+from wtforms import StringField, SubmitField, PasswordField, TextAreaField, SelectField, EmailField, HiddenField
 from wtforms.validators import DataRequired, URL
 from flask_wtf.file import FileField
 from flask_ckeditor import CKEditorField
 from flask_ckeditor.fields import CKEditorField
 
-
 # WTForm for creating a blog post
 class CreatePostForm(FlaskForm):
     title = StringField("Blog Post Title", validators=[DataRequired()])
-    intro = StringField("Intro", validators=[DataRequired()])
     slug = StringField("Slug", validators=[DataRequired()])
+    intro = StringField("Intro", validators=[DataRequired()])
     img_url = StringField('Image', validators=[DataRequired()])
     body = CKEditorField("Blog Content", validators=[DataRequired()])
     category = SelectField('Category', coerce=int, validators=[DataRequired()])

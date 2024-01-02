@@ -6,7 +6,7 @@ from flask_ckeditor import CKEditor
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.orm import relationship
-from sqlalchemy import func
+from sqlalchemy import event
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -78,6 +78,7 @@ class BlogPost(db.Model):
     @property
     def author_name(self):
         return self.user.name if self.user else None
+    
 
 
 # comments model
@@ -169,10 +170,13 @@ def blog():
     return render_template("blog.html", all_posts=posts, all_categories=categories, current_user=current_user, form=subscribe_form)
 
 # SHOW POST
-@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
-def show_post(post_id):
+@app.route('/post/<int:post_id>/<slug>', methods=['GET', 'POST'])
+def show_post(post_id, slug):
     # current post
     requested_post = db.get_or_404(BlogPost, post_id)
+    # Check if the provided slug matches the actual slug of the post
+    if requested_post.slug != slug:
+        abort(404)
 
     # Fetch all unique categories
     categories = db.session.query(Category.name).distinct().all()
@@ -240,14 +244,15 @@ def create_post():
 
     # fetch data from form
     if form.validate_on_submit():
+
         # Retrieve the selected category
         selected_category_id = form.category.data
         selected_category = Category.query.get(selected_category_id)
 
         new_post = BlogPost(
             title=form.title.data,
+            slug=form.slug.data.lower().replace(" ", "-"),
             intro=form.intro.data,
-            slug=form.slug.data,
             img_url=form.img_url.data,
             body=form.body.data,
             author=current_user,
@@ -263,15 +268,15 @@ def create_post():
     return render_template("new_post.html", form=form, current_user=current_user)
 
 # EDIT POST
-@app.route('/edit-post/<int:post_id>', methods=['GET', 'POST'])
+@app.route('/edit-post/<int:post_id>/<slug>', methods=['GET', 'POST'])
 @admin_only
-def edit_post(post_id):
+def edit_post(post_id, slug):
     post = db.get_or_404(BlogPost, post_id)
 
     edit_form = CreatePostForm(
         title=post.title,
-        intro=post.intro,
         slug=post.slug,
+        intro=post.intro,
         img_url=post.img_url,
         body=post.body,
         author=post.author,
@@ -293,8 +298,8 @@ def edit_post(post_id):
         post.body = edit_form.body.data
 
         db.session.commit()
-        return redirect(url_for('show_post', post_id=post.id))
-    return render_template("new_post.html", form=edit_form, is_edit=True, current_user=current_user, categories=categories)
+        return redirect(url_for('show_post', post_id=post.id, slug=post.slug))
+    return render_template("new_post.html", form=edit_form, is_edit=True, current_user=current_user, categories=categories, slug=post.slug)
 
 # DELETE POST
 @app.route('/delete-post/<int:post_id>')
@@ -550,8 +555,8 @@ def subscribe():
 
 # CONTACT ROUTE
 
-MY_EMAIL = "SOME_MAIL"
-MY_PASSWORD = "SOME PASSWORD"
+MY_EMAIL = "MY_EMAIL"
+MY_PASSWORD = "MY_PASSWORD"
 
 
 @app.route('/contato', methods=['POST', 'GET'])
@@ -568,7 +573,7 @@ def contato():
             connection.login(user=MY_EMAIL, password=MY_PASSWORD)
             connection.sendmail(
                 from_addr=MY_EMAIL,
-                to_addrs="SOME_RECEIVER",
+                to_addrs="OTHER_EMAIL",
                 msg=f"Subject:Novo contato! \n\n Email sent by:{name}\nEmail:{email}\nMensagem:\n{message}")
 
     return render_template("contato.html")
