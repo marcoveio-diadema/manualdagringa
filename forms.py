@@ -9,9 +9,13 @@ from flask_ckeditor.fields import CKEditorField
 class CreatePostForm(FlaskForm):
     title = StringField("Blog Post Title", validators=[DataRequired()])
     slug = StringField("Slug", validators=[DataRequired()])
+    img_background = StringField('Background Image', validators=[DataRequired()])
     intro = StringField("Intro", validators=[DataRequired()])
-    img_url = StringField('Image', validators=[DataRequired()])
     body = CKEditorField("Blog Content", validators=[DataRequired()])
+    img_1 = StringField('Image 1', validators=[DataRequired()])
+    img_2 = StringField('Image 2', validators=[DataRequired()])
+    img_3 = StringField('Image 3')
+    body_2 = CKEditorField("Blog Content", validators=[DataRequired()])
     category = SelectField('Category', coerce=int, validators=[DataRequired()])
     submit = SubmitField("Submit Post")
 
@@ -60,3 +64,9 @@ class ContactForm(FlaskForm):
 class SearchForm(FlaskForm):
     busca = StringField("Busca:", validators=[DataRequired()])
     submit = SubmitField("Buscar!")
+
+
+class QuestionsForm(FlaskForm):
+    question = StringField("Pergunta:", validators=[DataRequired()])
+    answer = TextAreaField("Resposta", validators=[DataRequired()])
+    submit = SubmitField("Salvar!")

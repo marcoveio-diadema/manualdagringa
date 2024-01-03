@@ -14,7 +14,7 @@ import smtplib
 
 
 # import forms.py
-from forms import CommentForm, ContactForm, CategoryForm, CreatePostForm, LoginForm, RegisterForm, SubscribeForm, SearchForm
+from forms import CommentForm, ContactForm, CategoryForm, CreatePostForm, LoginForm, RegisterForm, SubscribeForm, SearchForm, QuestionsForm
 
 
 # FLASK CONFIGURATION
@@ -71,7 +71,11 @@ class BlogPost(db.Model):
     slug = db.Column(db.String(150), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     body = db.Column(db.Text, nullable=False)
-    img_url = db.Column(db.String(500), nullable=False)
+    body_2 = db.Column(db.Text, nullable=False)
+    img_background = db.Column(db.String(500), nullable=False)
+    img_1 = db.Column(db.String(500), nullable=False)
+    img_2 = db.Column(db.String(500), nullable=False)
+    img_3 = db.Column(db.String(500), nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     category = db.relationship('Category', backref=db.backref('posts', lazy=True))
 
@@ -104,6 +108,14 @@ class Category(db.Model):
 class Subscribe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+# questions model
+class Questions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(150), unique=True, nullable=False)
+    answer = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
 
@@ -251,10 +263,14 @@ def create_post():
 
         new_post = BlogPost(
             title=form.title.data,
+            img_background=form.img_background.data,
             slug=form.slug.data.lower().replace(" ", "-"),
             intro=form.intro.data,
-            img_url=form.img_url.data,
+            img_1=form.img_1.data,
+            img_2=form.img_2.data,
+            img_3=form.img_3.data,
             body=form.body.data,
+            body_2=form.body_2.data,
             author=current_user,
             category=selected_category,
             date=datetime.utcnow(),
@@ -275,10 +291,14 @@ def edit_post(post_id, slug):
 
     edit_form = CreatePostForm(
         title=post.title,
+        img_background=post.img_background,
         slug=post.slug,
         intro=post.intro,
-        img_url=post.img_url,
+        img_1=post.img_1,
+        img_2=post.img_2,
+        img_3=post.img_3,
         body=post.body,
+        body_2=post.body_2,
         author=post.author,
         category=post.category,
     )
@@ -291,11 +311,15 @@ def edit_post(post_id, slug):
 
     if edit_form.validate_on_submit():
         post.title = edit_form.title.data
+        post.img_background = edit_form.img_background.data
         post.intro = edit_form.intro.data
         post.slug = edit_form.slug.data
-        post.img_url = edit_form.img_url.data
+        post.img_1 = edit_form.img_1.data
+        post.img_2 = edit_form.img_2.data
+        post.img_3 = edit_form.img_3.data
         post.author = current_user
         post.body = edit_form.body.data
+        post.body_2 = edit_form.body_2.data
 
         db.session.commit()
         return redirect(url_for('show_post', post_id=post.id, slug=post.slug))
@@ -363,9 +387,37 @@ def forum():
 
 
 # FAQS PAGE
-@app.route('/faqs')
+@app.route('/perguntas-frequentes', methods=['GET', 'POST'])
 def faqs():
-    return render_template('faqs.html')
+    form = QuestionsForm()
+
+    questions = Questions.query.all()
+
+    if form.validate_on_submit():
+        # check if already registerd
+        question = form.question.data
+        result = db.session.execute(db.select(Questions).where(Questions.question == question))
+        double_question = result.scalar()
+
+        if double_question:
+            # User already exists
+            flash("Pergunta ja cadastrada, tente outra.")
+            return redirect(url_for('faqs'))
+
+        new_question = Questions(
+            question = form.question.data,
+            answer = form.answer.data,
+        )
+
+         # commit changes
+        db.session.add(new_question)
+        db.session.commit()
+
+        # message to confirm
+        flash("Pergunta adicionada com sucesso!")
+        return redirect(url_for('faqs'))
+
+    return render_template('faqs.html', form=form, questions=questions)
 
 # DELETE CATEOGRY
 @app.route('/delete-category/<int:category_id>')
@@ -532,6 +584,15 @@ def delete_subscriber(subscriber_id):
     return redirect(url_for('admin'))
 
 
+@app.route('/delete-question/<int:question_id>')
+@admin_only
+def delete_question(question_id):
+    question_to_delete = db.get_or_404(Questions, question_id)
+    db.session.delete(question_to_delete)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+
 # NEWSLETTER SUBSCRIBE ROUTE
 @app.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
@@ -621,6 +682,9 @@ def admin():
     # fetch all categories
     categories = Category.query.all()
 
+    # fetch all questions
+    questions = Questions.query.all()
+
      # Create a form for adding a new category
     form = CategoryForm()
 
@@ -637,7 +701,7 @@ def admin():
             flash('Category added successfully.', 'success')
         return redirect(url_for('admin'))
 
-    return render_template("admin.html", posts=posts, users=users, subscribers=subscribers, comments=comments, categories=categories, form=form)
+    return render_template("admin.html", questions=questions, posts=posts, users=users, subscribers=subscribers, comments=comments, categories=categories, form=form)
 
 # CUSTOM ERROR PAGES:
 

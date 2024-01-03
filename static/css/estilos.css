@@ -47,6 +47,10 @@ p, span, ul, li {
     height: 500px !important;
 }
 
+.faqs-header {
+    height: 500px !important;
+}
+
 /* INDEX PAGE - FEATURES SECTION */
 
 .index-page-form {

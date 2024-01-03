@@ -5,7 +5,7 @@
 {% block content %}
 
 <!-- Page Header-->
-<header class="masthead"  id="post_img" style="background-image: url('{{ post.img_url }}')">
+<header class="masthead"  id="post_img" style="background-image: url('{{ post.img_background }}')">
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
@@ -55,7 +55,19 @@
               <hr class="w-80">
               <!-- POST CONTENT -->
               <p>
+                <img src="{{ post.img_1 }}" alt="" class="img-fluid rounded">
+              </p>
+              <p>
                   {{ post.body|safe }}
+              </p>
+              <p>
+                <img src="{{ post.img_2 }}" alt="" class="img-fluid rounded">
+              </p>
+              <p>
+                {{ post.body_2|safe }}
+              </p>
+              <p>
+                <img src="{{ post.img_3 }}" alt="" class="img-fluid rounded">
               </p>
               <hr>
             <!-- ONLY SHOW EDIT BUTTON IF USER ID 1 (ADMIN USER) -->
@@ -123,7 +135,7 @@
                     <li class="bg-white py-1 px-1 rounded">
                       <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-2 link-body-emphasis text-decoration-none"
                          href="{{ url_for('show_post', post_id=other_post.id, slug=post.slug) }}">
-                        <img src="{{ other_post.img_url }}" alt="Image" class="img-fluid rounded mx-auto d-bloc" width="150px">
+                        <img src="{{ other_post.img_background }}" alt="Image" class="img-fluid rounded mx-auto d-bloc" width="150px">
                         <div class="col">
                           <h6 class="mb-0 text-center">{{other_post.title}} </h6>
                           <p class="text-center small text-body-secondary">{{other_post.date.strftime('%d/%m/%Y') }}</p>

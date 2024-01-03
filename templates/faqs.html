@@ -1,17 +1,18 @@
 {% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_form %}
 {% block title %}Sobre Nós{% endblock%}
 
 {% block content %}
 <!-- Page Header-->
 <header
-  class="masthead"
+  class="masthead faqs-header"
   style="background-image: url('../static/assets/img/poonhill.jpeg')"
 >
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="site-heading">
-          <h1 class="features-text">Perguntas e Respostas</h1>
+          <h1 class="features-text">Perguntas Frequentes</h1>
           <span class="subheading features-text">Guia rapido de perguntas e respostas.</span>
         </div>
       </div>
@@ -19,32 +20,52 @@
   </div>
 </header>
 
-<section class="section-sobre py-5">
+
+
+<section class="section-faqs py-5">
     <main class="mb-4">
-      <div class="container px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-          <div class="col-md-10 col-lg-8 text-center">
-            <h4>Perguntas frequentes:</h4>
-              <hr>
-              <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        1. O que é um visto de férias-trabalho?
+        <div class="container px-4 px-lg-5">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+                        <span class="mx-5">{{ message }}</span>
+                    <button type="button" class="btn btn-close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
-                  </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                     <span>O visto de férias-trabalho é um tipo de visto que permite que os visitantes explorem um país enquanto trabalham temporariamente para financiar sua estadia.</span>
                     </div>
-                  </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 text-center">
+                    <hr>
+                    {% for question in questions %}
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ question.id }}" aria-expanded="true" aria-controls="collapse{{ question.id }}">
+                                {{ question.question }}
+                            </button>
+                            </h2>
+                            <div id="collapse{{ question.id }}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <span>{{ question.answer }}</span>
+                                </div>
+                            </div>
+                        </div>      
+                    </div>
+                    {% endfor %} 
                 </div>
-                
-        
-              </div>
-          </div>
+                {% if current_user.id == 1 %}
+                <div class="col-lg-8 col-md-10 py-5 mx-auto">
+                    <h4>Novas perguntas</h4>
+                    <!-- DISPLAY LOGIN FORM -->
+                      {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+                </div>
+                {% endif %}
+            </div>
         </div>
-      </div>
     </main>
 </section>
 
