@@ -122,7 +122,7 @@
         {% for post in posts %}
         <tr>
           <th scope="row">{{ post.id }}</th>
-          <td>{{ post.title}}</td>
+          <td><a href="{{url_for('show_post', post_id=post.id, slug=post.slug )}}" class="href">{{ post.title}}</a></td>
           <td>{{ post.date.strftime('%d-%m-%Y') }}</td>
           <td>
             <a href="{{ url_for('edit_post', post_id=post.id, slug=post.slug) }}">Edit</a>

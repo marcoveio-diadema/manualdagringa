@@ -228,22 +228,31 @@ def show_post(post_id, slug):
 def delete_comment(comment_id):
     comment_to_delete = Comment.query.get(comment_id)
 
+     # Default values for post_id and slug
+    post_id = None
+    slug = None
+
     if comment_to_delete:
         # Check if the current user is the author of the comment
         if current_user.is_authenticated and (current_user.id == comment_to_delete.comment_author.id or current_user.is_admin):
+            parent_post = comment_to_delete.parent_post
+            post_id = parent_post.id
+
             db.session.delete(comment_to_delete)
             db.session.commit()
-            # flash("Comment deleted successfully.")
-        else:
-            abort(403)  # Forbidden
+            flash("Comment deleted successfully.")
+    
+
+            # Check if the delete request came from the admin template
+            if "from_admin" in request.args and request.args["from_admin"] == "true":
+                # Redirect back to the admin page
+                return redirect(url_for("admin"))
+            else:
+                # Redirect back to the post page
+                return redirect(url_for("show_post", post_id=post_id, slug=parent_post.slug))
         
-        # Check if the delete request came from the admin template
-    if "from_admin" in request.args and request.args["from_admin"] == "true":
-        # Redirect back to the admin page
-        return redirect(url_for("admin"))
-    else:
-        # Redirect back to the post page
-        return redirect(url_for("show_post", post_id=comment_to_delete.post_id))
+    flash("Comment not found.")
+    return redirect(url_for("home"))
 
 
 # CREATE NEW POST
@@ -620,7 +629,7 @@ def subscribe():
 
         db.session.add(new_subscriber)
         db.session.commit()
-
+        flash("Email cadastrado com sucesso!")
         return redirect(url_for('home'))
     return render_template("index.html", form=form, all_posts=posts)
 
