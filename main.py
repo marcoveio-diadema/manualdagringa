@@ -30,7 +30,8 @@ ckeditor = CKEditor(app)
 Bootstrap5(app)
 
 
-# MODELS
+####### DB MODELS ######
+
 # user model
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -84,7 +85,6 @@ class BlogPost(db.Model):
         return self.user.name if self.user else None
     
 
-
 # comments model
 class Comment(db.Model):
     __tablename__ = "comments"
@@ -97,6 +97,7 @@ class Comment(db.Model):
     # Child relationship with the tablename of BlogPost.
     post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
     parent_post = relationship("BlogPost", back_populates="comments")
+
 
 # category model
 class Category(db.Model):
@@ -144,7 +145,7 @@ gravatar = Gravatar(app,
 def load_user(user_id):
     return db.get_or_404(User, user_id)
 
-
+########## ADMIN ROUTES: #########
 
 # ADMIN DECORATOR FUNCTION
 def admin_only(func):
@@ -158,102 +159,79 @@ def admin_only(func):
 
     return decorated_function
 
-#INDEX
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    form = SubscribeForm()
-    posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
 
-    return render_template("index.html", all_posts=posts, current_user=current_user, form=form)
+# ADMIN ROUTE:
+@app.route('/admin', methods=['GET', 'POST'])
+@admin_only
+def admin():
+     # Fetch all comments
+    comments = Comment.query.all()
 
-# BLOG 
-@app.route('/blog')
-def blog():
-    # Fetch all unique categories
-    categories = db.session.query(Category.name).distinct().all()
-    categories = [category[0] for category in categories]
+    # fetch all posts
+    posts = BlogPost.query.all()
 
-    # Fetch all posts
-    posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
+    # fetch all users
+    users = User.query.all()
 
-    # subscribe form
-    subscribe_form = SubscribeForm()
+    # fetch all subscribers
+    subscribers = Subscribe.query.all()
 
-    return render_template("blog.html", all_posts=posts, all_categories=categories, current_user=current_user, form=subscribe_form)
+    # fetch all categories
+    categories = Category.query.all()
 
-# SHOW POST
-@app.route('/post/<int:post_id>/<slug>', methods=['GET', 'POST'])
-def show_post(post_id, slug):
-    # current post
-    requested_post = db.get_or_404(BlogPost, post_id)
-    # Check if the provided slug matches the actual slug of the post
-    if requested_post.slug != slug:
-        abort(404)
+    # fetch all questions
+    questions = Questions.query.all()
 
-    # Fetch all unique categories
-    categories = db.session.query(Category.name).distinct().all()
-    categories = [category[0] for category in categories]
+     # Create a form for adding a new category
+    form = CategoryForm()
 
-    # other posts
-    other_posts = BlogPost.query.filter(BlogPost.id != post_id).order_by(BlogPost.date.desc()).all()
-
-    # fetch comments form
-    comment_form = CommentForm()
-    # only allow logged-in users to comment
-    if comment_form.validate_on_submit():
-        if not current_user.is_authenticated:
-            flash("Você precisa fazer o login ou se registrar para comentar nos posts.")
-            return redirect(url_for("login"))
-
-        new_comment = Comment(
-            text=comment_form.comment_text.data,
-            comment_author=current_user,
-            parent_post=requested_post,
-        )
-        db.session.add(new_comment)
-        db.session.commit()
-
-        # Reset the comment text area after submitting the comment
-        comment_form.comment_text.data = ''
-
-    # Fetch comments associated with the post
-    comments = Comment.query.filter_by(post_id=post_id).all()
-
-    return render_template("post.html", post=requested_post, current_user=current_user,
-                           form=comment_form, comments=comments, other_posts=other_posts, all_categories=categories)
-
-# DELETE COMMENT
-@app.route("/delete-comment/<int:comment_id>", methods=["GET", "POST"])
-@login_required
-def delete_comment(comment_id):
-    comment_to_delete = Comment.query.get(comment_id)
-
-     # Default values for post_id and slug
-    post_id = None
-    slug = None
-
-    if comment_to_delete:
-        # Check if the current user is the author of the comment
-        if current_user.is_authenticated and (current_user.id == comment_to_delete.comment_author.id or current_user.is_admin):
-            parent_post = comment_to_delete.parent_post
-            post_id = parent_post.id
-
-            db.session.delete(comment_to_delete)
+    if form.validate_on_submit():
+         # Check if the category already exists
+        existing_category = Category.query.filter_by(name=form.name.data).first()
+        if existing_category:
+            flash('Categoria já existente, tente outra', 'category_duplicate')
+        else:
+            # Add a new category if it doesn't exist
+            new_category = Category(name=form.name.data)
+            db.session.add(new_category)
             db.session.commit()
-            flash("Comment deleted successfully.")
+            flash('Categoria adicionada a base de dados com sucesso', 'category_added')
+        return redirect(url_for('admin'))
     
 
-            # Check if the delete request came from the admin template
-            if "from_admin" in request.args and request.args["from_admin"] == "true":
-                # Redirect back to the admin page
-                return redirect(url_for("admin"))
-            else:
-                # Redirect back to the post page
-                return redirect(url_for("show_post", post_id=post_id, slug=parent_post.slug))
-        
-    flash("Comment not found.")
-    return redirect(url_for("home"))
+    # Create a form for adding a new question
+    question_form = QuestionsForm()
 
+    if question_form.validate_on_submit():
+        # Check if the question already exists
+        existing_question = Questions.query.filter_by(question=question_form.question.data).first()
+        if existing_question:
+            flash('Pergunta já cadastrada, tente outra.', 'question_duplicate')
+        else:
+            # Add a new question if it doesn't exist
+            new_question = Questions(
+                question=question_form.question.data,
+                answer=question_form.answer.data,
+            )
+            db.session.add(new_question)
+            db.session.commit()
+            flash('Pergunta adicionada com sucesso!', 'question_added')
+        return redirect(url_for('admin'))
+
+
+    return render_template("admin.html", 
+                           questions=questions, 
+                           posts=posts, 
+                           users=users, 
+                           subscribers=subscribers, 
+                           comments=comments, 
+                           categories=categories, 
+                           form=form,
+                           question_form=question_form,
+                           )
+
+
+######## CREATE POST, SHOW POST, EDIT POST #######
 
 # CREATE NEW POST
 @app.route('/new_post', methods=['GET', 'POST'])
@@ -291,6 +269,49 @@ def create_post():
         return redirect(url_for('blog'))
 
     return render_template("new_post.html", form=form, current_user=current_user)
+
+
+# SHOW POST
+@app.route('/post/<int:post_id>/<slug>', methods=['GET', 'POST'])
+def show_post(post_id, slug):
+    # current post
+    requested_post = db.get_or_404(BlogPost, post_id)
+    # Check if the provided slug matches the actual slug of the post
+    if requested_post.slug != slug:
+        abort(404)
+
+    # Fetch all unique categories
+    categories = db.session.query(Category.name).distinct().all()
+    categories = [category[0] for category in categories]
+
+    # other posts
+    other_posts = BlogPost.query.filter(BlogPost.id != post_id).order_by(BlogPost.date.desc()).all()
+
+    # fetch comments form
+    comment_form = CommentForm()
+    # only allow logged-in users to comment
+    if comment_form.validate_on_submit():
+        if not current_user.is_authenticated:
+            flash("Você precisa fazer o login ou se registrar para comentar nos posts.", "danger")
+            return redirect(url_for("login"))
+
+        new_comment = Comment(
+            text=comment_form.comment_text.data,
+            comment_author=current_user,
+            parent_post=requested_post,
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+
+        # Reset the comment text area after submitting the comment
+        comment_form.comment_text.data = ''
+
+    # Fetch comments associated with the post
+    comments = Comment.query.filter_by(post_id=post_id).all()
+
+    return render_template("post.html", post=requested_post, current_user=current_user,
+                           form=comment_form, comments=comments, other_posts=other_posts, all_categories=categories)
+
 
 # EDIT POST
 @app.route('/edit-post/<int:post_id>/<slug>', methods=['GET', 'POST'])
@@ -331,112 +352,13 @@ def edit_post(post_id, slug):
         post.body_2 = edit_form.body_2.data
 
         db.session.commit()
+
+        flash("Post editado com sucesso", "success")
         return redirect(url_for('show_post', post_id=post.id, slug=post.slug))
     return render_template("new_post.html", form=edit_form, is_edit=True, current_user=current_user, categories=categories, slug=post.slug)
 
-# DELETE POST
-@app.route('/delete-post/<int:post_id>')
-@admin_only
-def delete_post(post_id):
-    post_to_delete = db.get_or_404(BlogPost, post_id)
-    db.session.delete(post_to_delete)
-    db.session.commit()
-    return redirect(url_for('blog'))
 
-# CONTEXT FUNCTION FOR SEARCH
-@app.context_processor
-def base():
-    form = SearchForm()
-    return dict(form=form)
-
-
-# SEARCH FOR A POST
-@app.route('/busca', methods=['POST'])
-def search():
-    form = SearchForm()
-
-    # Fetch all unique categories
-    categories = db.session.query(Category.name).distinct().all()
-    categories = [category[0] for category in categories]
-
-    # search in the database:
-    posts_query = BlogPost.query
-
-    if form.validate_on_submit():
-        # get data from submitted form
-        busca = form.busca.data
-
-        # query the database
-        posts = posts_query.filter(BlogPost.body.like('%' + busca + '%')).order_by(BlogPost.title).all()
-
-        return render_template("search.html", form=form, busca=busca, posts=posts, all_categories=categories)
-
-# POSTS PER CATEGORY
-@app.route('/category/<category_name>')
-def post_category(category_name):
-    # Fetch all unique categories
-    categories = db.session.query(Category.name).distinct().all()
-    categories = [category[0] for category in categories]
-
-    category = Category.query.filter_by(name=category_name).first()
-    # if no category
-    if category is None:
-        abort(404)  # or handle the case where the category is not found
-
-    # Fetch posts that belong to the selected category
-    posts = BlogPost.query.filter_by(category=category).all()
-
-    return render_template("blog_category.html", posts=posts, category_name=category_name, current_user=current_user, all_categories=categories)
-
-
-# FORUM
-@app.route('/forum')
-def forum():
-    return render_template("forum_index.html")
-
-
-# FAQS PAGE
-@app.route('/perguntas-frequentes', methods=['GET', 'POST'])
-def faqs():
-    form = QuestionsForm()
-
-    questions = Questions.query.all()
-
-    if form.validate_on_submit():
-        # check if already registerd
-        question = form.question.data
-        result = db.session.execute(db.select(Questions).where(Questions.question == question))
-        double_question = result.scalar()
-
-        if double_question:
-            # User already exists
-            flash("Pergunta ja cadastrada, tente outra.")
-            return redirect(url_for('faqs'))
-
-        new_question = Questions(
-            question = form.question.data,
-            answer = form.answer.data,
-        )
-
-         # commit changes
-        db.session.add(new_question)
-        db.session.commit()
-
-        # message to confirm
-        flash("Pergunta adicionada com sucesso!")
-        return redirect(url_for('faqs'))
-
-    return render_template('faqs.html', form=form, questions=questions)
-
-# DELETE CATEOGRY
-@app.route('/delete-category/<int:category_id>')
-@admin_only
-def delete_category(category_id):
-    category_to_delete = db.get_or_404(Category, category_id)
-    db.session.delete(category_to_delete)
-    db.session.commit()
-    return redirect(url_for('admin'))
-
+######## NEW USER, USER PROFILE, LOGIN #######
 
 # REGISTER ROUTE
 @app.route('/signup', methods=['GET', 'POST'])
@@ -450,7 +372,7 @@ def sign_up():
 
         if user:
             # User already exists
-            flash("Email ja cadastrado, faça o seu login.")
+            flash("Email ja cadastrado, faça o seu login.", "danger")
             return redirect(url_for('login'))
 
         # hash and salt password
@@ -474,10 +396,11 @@ def sign_up():
         # Log in and authenticate user after adding details to database.
         login_user(new_user)
 
-        flash("Bem vindo a nossa comunidade!")
+        flash("Bem vindo a nossa comunidade!", "success")
         return redirect(url_for('user', user_id=new_user.id, name=current_user.name))
 
     return render_template("sign_up.html", form=form)
+
 
 # LOGIN ROUTE
 @app.route('/login', methods=['GET', 'POST'])
@@ -495,10 +418,10 @@ def login():
 
         # check if login details are correct
         if not user:
-            flash("Usuario não encontrado, tente novamente.")
+            flash("Usuario não encontrado, tente novamente.", "danger")
             return redirect(url_for('login'))
         elif not check_password_hash(user.password, password):
-            flash("Senha incorreta, tente novamente.")
+            flash("Senha incorreta, tente novamente.", "danger")
             return redirect(url_for('login'))
         else:
             login_user(user)
@@ -511,7 +434,6 @@ def login():
             
     # if methods == GET
     return render_template("login.html", form=form)
-
 
 
 # USER PAGE
@@ -548,10 +470,75 @@ def user(user_id):
         db.session.commit()
 
         # message to confirm update
-        flash('Dados atualizados com sucesso!')
+        flash('Dados atualizados com sucesso!', 'success')
         return redirect( url_for('user', user_id=user.id))
     
     return render_template("user.html", form=edit_user_form, current_user=current_user, name=current_user.name, gravatar=gravatar)
+
+
+# LOGOUT ROUTE
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+######## DELETE POST, COMMENT, USER, SUBSCRIBER, CATEGORY, FAQS ######
+
+# DELETE COMMENT
+@app.route("/delete-comment/<int:comment_id>", methods=["GET", "POST"])
+@login_required
+def delete_comment(comment_id):
+    comment_to_delete = Comment.query.get(comment_id)
+
+     # Default values for post_id and slug
+    post_id = None
+    slug = None
+
+    if comment_to_delete:
+        # Check if the current user is the author of the comment
+        if current_user.is_authenticated and (current_user.id == comment_to_delete.comment_author.id or current_user.is_admin):
+            parent_post = comment_to_delete.parent_post
+            post_id = parent_post.id
+
+            db.session.delete(comment_to_delete)
+            db.session.commit()    
+
+            # Check if the delete request came from the admin template
+            if "from_admin" in request.args and request.args["from_admin"] == "true":
+                # Redirect back to the admin page
+                flash('Comentario deletado da base de dados com sucesso!', 'comment_deleted')
+                return redirect(url_for("admin"))
+            else:
+                # Redirect back to the post page
+                return redirect(url_for("show_post", post_id=post_id, slug=parent_post.slug))
+        
+    flash("Comment not found.", category='comment_danger')
+    return redirect(url_for("home"))
+
+
+# DELETE POST
+@app.route('/delete-post/<int:post_id>')
+@admin_only
+def delete_post(post_id):
+    post_to_delete = db.get_or_404(BlogPost, post_id)
+    db.session.delete(post_to_delete)
+    db.session.commit()
+
+    flash('Post deletado da base de dados com sucesso!', 'post_deleted')
+    return redirect(url_for('blog'))
+
+
+# DELETE CATEOGRY
+@app.route('/delete-category/<int:category_id>')
+@admin_only
+def delete_category(category_id):
+    category_to_delete = db.get_or_404(Category, category_id)
+    db.session.delete(category_to_delete)
+    db.session.commit()
+
+    flash('Categoria deletada da base de dados com sucesso!', 'category_deleted')
+    return redirect(url_for('admin'))
 
 
 # DELETE USER
@@ -564,14 +551,14 @@ def delete_user(user_id):
     if current_user.is_admin and current_user.id != user_to_delete.id:
         db.session.delete(user_to_delete)
         db.session.commit()
-        flash('User deleted successfully!')
+        flash('Usuario deletado da base de dados com sucesso!', 'user_deleted')
         return redirect(url_for('admin'))
     
     # Users can delete their own account
     elif current_user.id == user_to_delete.id:
         db.session.delete(user_to_delete)
         db.session.commit()
-        flash('Que pena te ver partir, volte quando quiser!')
+        flash('Que pena te ver partir, volte quando quiser!', 'user_deleted')
 
          # Log out the user after deleting the account
         logout_user()
@@ -590,16 +577,109 @@ def delete_subscriber(subscriber_id):
     subscriber_to_delete = db.get_or_404(Subscribe, subscriber_id)
     db.session.delete(subscriber_to_delete)
     db.session.commit()
+
+    flash('Subscriber deletado da base de dados com sucesso!', 'subscriber_deleted')
     return redirect(url_for('admin'))
 
 
+# DELETE FAQ QUESTION
 @app.route('/delete-question/<int:question_id>')
 @admin_only
 def delete_question(question_id):
     question_to_delete = db.get_or_404(Questions, question_id)
     db.session.delete(question_to_delete)
     db.session.commit()
+
+    flash('Subscriber deletado da base de dados com sucesso!', 'question_deleted')
     return redirect(url_for('admin'))
+
+
+######## INDEX, BLOG, CATEGORY, SEARCH, CONTACT, FAQS, FORUM, ABOUT ROUTES #####
+
+#INDEX
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    form = SubscribeForm()
+    posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
+
+    return render_template("index.html", all_posts=posts, current_user=current_user, form=form)
+
+
+# BLOG 
+@app.route('/blog')
+def blog():
+    # Fetch all unique categories
+    categories = db.session.query(Category.name).distinct().all()
+    categories = [category[0] for category in categories]
+
+    # Fetch all posts
+    posts = BlogPost.query.order_by(BlogPost.date.desc()).all()
+
+    # subscribe form
+    subscribe_form = SubscribeForm()
+
+    return render_template("blog.html", all_posts=posts, all_categories=categories, current_user=current_user, form=subscribe_form)
+
+
+# CONTEXT FUNCTION FOR SEARCH
+@app.context_processor
+def base():
+    form = SearchForm()
+    return dict(form=form)
+
+
+# SEARCH FOR A POST
+@app.route('/busca', methods=['POST'])
+def search():
+    form = SearchForm()
+
+    # Fetch all unique categories
+    categories = db.session.query(Category.name).distinct().all()
+    categories = [category[0] for category in categories]
+
+    # search in the database:
+    posts_query = BlogPost.query
+
+    if form.validate_on_submit():
+        # get data from submitted form
+        busca = form.busca.data
+
+        # query the database
+        posts = posts_query.filter(BlogPost.body.like('%' + busca + '%')).order_by(BlogPost.title).all()
+
+        return render_template("search.html", form=form, busca=busca, posts=posts, all_categories=categories)
+
+
+# POSTS PER CATEGORY
+@app.route('/category/<category_name>')
+def post_category(category_name):
+    # Fetch all unique categories
+    categories = db.session.query(Category.name).distinct().all()
+    categories = [category[0] for category in categories]
+
+    category = Category.query.filter_by(name=category_name).first()
+    # if no category
+    if category is None:
+        abort(404)  # or handle the case where the category is not found
+
+    # Fetch posts that belong to the selected category
+    posts = BlogPost.query.filter_by(category=category).all()
+
+    return render_template("blog_category.html", posts=posts, category_name=category_name, current_user=current_user, all_categories=categories)
+
+
+# FORUM
+@app.route('/forum')
+def forum():
+    return render_template("forum_index.html")
+
+
+# FAQS PAGE
+@app.route('/perguntas-frequentes', methods=['GET', 'POST'])
+def faqs():
+    questions = Questions.query.all()
+
+    return render_template('faqs.html', questions=questions)
 
 
 # NEWSLETTER SUBSCRIBE ROUTE
@@ -619,8 +699,8 @@ def subscribe():
 
         if subscribed_user:
             # User already exists
-            flash("Email já esta cadastrado, use outro!")
-            return redirect(url_for('subscribe'))
+            flash("Email já esta cadastrado, use outro!", "danger")
+            return redirect(url_for('blog'))
 
         # Create a new Names instance and add it to the database
         new_subscriber = Subscribe(
@@ -629,8 +709,15 @@ def subscribe():
 
         db.session.add(new_subscriber)
         db.session.commit()
-        flash("Email cadastrado com sucesso!")
-        return redirect(url_for('home'))
+        flash("Email cadastrado com sucesso!", "success")
+
+        # Determine the redirect destination based on the source parameter
+        source = request.args.get('source', 'index')
+        if source == 'blog':
+            return redirect(url_for('blog'))
+        else:
+            return redirect(url_for('home'))
+        
     return render_template("index.html", form=form, all_posts=posts)
 
 
@@ -647,7 +734,7 @@ def contato():
         email = request.form.get("email")
         message = request.form.get("message")
 
-        flash("Obrigado pela mensagem, responderemos em breve!")
+        flash("Obrigado pela mensagem, responderemos em breve!", "success")
 
         with smtplib.SMTP("smtp.gmail.com") as connection:
             connection.starttls()
@@ -660,59 +747,14 @@ def contato():
     return render_template("contato.html")
 
 
+# ABOUT ROUTE
 @app.route('/sobre-nos')
 def sobre_nos():
     return render_template("sobre-nos.html")
 
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
 
-
-# ADMIN ROUTE:
-@app.route('/admin', methods=['GET', 'POST'])
-@admin_only
-def admin():
-     # Fetch all comments
-    comments = Comment.query.all()
-
-    # fetch all posts
-    posts = BlogPost.query.all()
-
-    # fetch all users
-    users = User.query.all()
-
-    # fetch all subscribers
-    subscribers = Subscribe.query.all()
-
-    # fetch all categories
-    categories = Category.query.all()
-
-    # fetch all questions
-    questions = Questions.query.all()
-
-     # Create a form for adding a new category
-    form = CategoryForm()
-
-    if form.validate_on_submit():
-         # Check if the category already exists
-        existing_category = Category.query.filter_by(name=form.name.data).first()
-        if existing_category:
-            flash('Category already exists.', 'danger')
-        else:
-            # Add a new category if it doesn't exist
-            new_category = Category(name=form.name.data)
-            db.session.add(new_category)
-            db.session.commit()
-            flash('Category added successfully.', 'success')
-        return redirect(url_for('admin'))
-
-    return render_template("admin.html", questions=questions, posts=posts, users=users, subscribers=subscribers, comments=comments, categories=categories, form=form)
-
-# CUSTOM ERROR PAGES:
+########## CUSTOM ERROR PAGES:
 
 # Invalid URL
 @app.errorhandler(404)

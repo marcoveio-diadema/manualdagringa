@@ -99,21 +99,21 @@
             <!-- NEWSLETTER FORM -->
             <h4 class="pt-4 mt-4 border-top">Se inscreva na nossa newsletter</h4>
               <p>Receba todas as nossas novidades direto no seu email!</p>
-                <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
-                  {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-danger alert-dismissible fade show d-flex justify-content-center" role="alert">
-                                   <span class="mx-5">{{ message }}</span>
-                                  <button type="button" class="btn-danger close" data-dismiss="alert" aria-label="Close">
-                                  </button>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    {% endwith %}
                  <!-- Newsletter Form -->
+                   
+              <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                  <div class="alert {% if category == 'success' %}alert-success{% elif category == 'danger' %}alert-danger{% endif %} alert-dismissible fade show d-flex justify-content-center" role="alert">
+                    <span class="mx-3">{{ message }}</span>
+                    <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
                  
-                <form method="POST" action="{{ url_for('subscribe') }}" class="text-center">
+                <form method="POST" id="subscribe-form" action="{{ url_for('subscribe', source='blog') }}" class="text-center">
                     {{ form.hidden_tag() }}                   
                     {{ form.email.label }}
                     {{ form.email }}

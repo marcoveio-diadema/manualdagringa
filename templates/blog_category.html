@@ -28,7 +28,9 @@
         <div class="col-lg-8">
             <h4 class="my-4">
                 Posts relacionados a:</h4>
-            <h3 class="pb-4 my-4 border-bottom fst-italic category-search-text">{{ posts[0].category.name }}</h3>
+               
+            <h3 class="pb-4 my-4 border-bottom fst-italic category-search-text">{{ category_name }}</h3>
+            
             <!-- CHECK IF THERE ARE POSTS AND IF SO DISPLAY THEM -->
             {% if posts %}
             {% for post in posts %}

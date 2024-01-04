@@ -161,21 +161,20 @@
           <p>Receba todas as nossas novidades direto no seu email!</p>
              
           <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
-          {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+              <div class="alert {% if category == 'success' %}alert-success{% elif category == 'danger' %}alert-danger{% endif %} alert-dismissible fade show d-flex justify-content-center" role="alert">
                 <span class="mx-3">{{ message }}</span>
-              <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">              
-              </button>
-            </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+              </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
 
              <!-- Newsletter Form -->
              
-            <form method="POST" action="{{ url_for('subscribe') }}">
+            <form method="POST" id="subscribe-form" action="{{ url_for('subscribe', source='index') }}">
                 {{ form.hidden_tag() }}
                 {{ form.email.label }}
                 {{ form.email }}
@@ -189,34 +188,5 @@
 {% endblock %}
 
 {% block script %}
-<script>
-  $(document).ready(function() {
-    // Intercept the form submission
-    $('#subscribe-form').submit(function(e) {
-      // Prevent the default form submission
-      e.preventDefault();
 
-      // Serialize the form data
-      var formData = $(this).serialize();
-
-      // Send an AJAX request to the server
-      $.ajax({
-        type: 'POST',
-        url: $(this).attr('action'),
-        data: formData,
-        success: function(response) {
-          // Handle the success response (if needed)
-          console.log(response);
-
-          // You may update the UI here without reloading the entire page
-          // For example, show a success message or update a counter
-        },
-        error: function(error) {
-          // Handle the error response (if needed)
-          console.error(error);
-        }
-      });
-    });
-  });
-</script>
 {% endblock%}

@@ -36,11 +36,11 @@
           <div class="card latest-post-card mb-3">
               <div class="row my-3 mx-3 lg-8 rounded shadow">
                   <div class="col-lg-4 pt-4">
-                      <img src="{{ post.img_url }}" class="card-img" alt="">
+                      <img src="{{ post.img_background }}" class="card-img" alt="">
                     </div>
                   <div class="col pt-2">
                       <div class="card-body">
-                      <a href="{{ url_for('show_post', post_id=post.id) }}">
+                      <a href="{{ url_for('show_post', post_id=post.id, slug=post.slug) }}">
                           <h6 class="card-title card-category-text">{{post.category.name}}</h6>
                           <h4 class="card-subtitle mb-2">{{post.title}}</h4>
                           <p class="card-text small">{{post.intro}}</p>

@@ -19,6 +19,7 @@
   </div>
 </header>
 
+<!-- SECTION MAIN PANEL -->
 <section class="section-admin py-5">
     <div class="container mt-5">
     <div class="row">
@@ -42,13 +43,13 @@
             <!-- Card with form for adding a new category -->
           <div class="col-md-6 col-lg-3 mb-3 mb-sm-0 py-3">
             <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Categoria:</h5>
-                    <div class="col-lg-8 col-md-10 mx-auto">
-                      <!-- RENDER SIGN UP FORM AND SUBMIT BUTTON -->
-                        {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-                    </div>
-                </div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Nova categoria</h5>
+                <p class="card-text">Clique aqui para criar uma nova categoria.</p>
+                   <div class="mt-auto d-flex justify-content-end">
+                    <a href="#" class="btn btn-primary">→</a>
+                  </div>
+              </div>
             </div>
           </div>
             <!-- all posts list -->
@@ -106,9 +107,25 @@
   
 </section>
 
+<!-- SECTION POSTS -->
 <section class="admin-details-section py-3">
   <div class="container px-4 py-3 admin-table">
     <h3 class="text-center pb-3">Todos os posts</h3>
+    <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+    <div class="container w-75">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          {% if category == 'post_deleted' %}
+            <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+              <span class="mx-5">{{ message }}</span>
+              <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+              </button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    </div>
+
     <table class="table table-striped table-hover shadow py-3">
       <thead>
         <tr>
@@ -141,6 +158,21 @@
 <section class="admin-details-section">
   <div class="container admin-table px-4 py-3">
     <h3 class="text-center pb-3">Todos os usuarios</h3>
+    <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+    <div class="container w-75">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          {% if category == 'user_deleted' %}
+            <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+              <span class="mx-5">{{ message }}</span>
+              <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+              </button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    </div>
+    
     <table class="table table-striped shadow table-hover py-3">
       <thead>
         <tr>
@@ -175,6 +207,21 @@
 <section class="admin-details-section">
   <div class="container px-4 py-3 admin-table">
     <h3 class="text-center pb-3">Todos os subscribers</h3>
+    <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+    <div class="container w-75">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        {% if category == 'subscriber_deleted' %}
+          <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+            <span class="mx-5">{{ message }}</span>
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+            </button>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endwith %}
+    </div>
+
     <table class="table table-striped shadow table-hover py-3">
       <thead>
         <tr>
@@ -205,6 +252,20 @@
 <section class="admin-details-section">
   <div class="container px-4 py-3 admin-table">
     <h3 class="text-center pb-3">Todos os comentarios</h3>
+    <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+    <div class="container w-75">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          {% if category == 'comment_deleted' %}
+            <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+              <span class="mx-5">{{ message }}</span>
+              <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+              </button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endwith %}
+    </div>
     <table class="table table-striped shadow table-hover py-3">
       <thead>
         <tr>
@@ -222,7 +283,10 @@
           <th scope="row">{{ comment.id }}</th>
           <td>{{ comment.comment_author.name }}</td>
           <td>{{ comment.text}}</td>
-          <td>{{ comment.parent_post.title }}</td>
+          <td>
+            <a href="{{ url_for('show_post', post_id=comment.parent_post.id, slug=comment.parent_post.slug) }}" target="_blank">
+              {{ comment.parent_post.title[:30] }} {{ '...' if comment.parent_post.title|length > 30 else '' }}</a>
+          </td>
           <td>{{ comment.posted_date.strftime('%d-%m-%Y') }}</td>
           <td>
             <a href="{{ url_for('delete_comment', comment_id=comment.id, from_admin=true) }}" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a>
@@ -239,6 +303,37 @@
 <section class="admin-details-section">
   <div class="container px-4 py-3 admin-table">
     <h3 class="text-center pb-3">Todos as categorias</h3>
+    <div class="col-lg-8 col-md-10 py-4 px-3 mx-auto my-3 rounded shadow bg-light">
+      <h4>Novas categorias</h4>
+      <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+      <div class="container w-75">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              {% if category == 'category_duplicate' %}
+                <div class="alert  alert-danger alert-dismissible fade show d-flex justify-content-center" role="alert">
+                  <span class="mx-3">{{ message }}</span>
+                  <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% elif category == 'category_added' %}
+                <div class="alert  alert-info alert-dismissible fade show d-flex justify-content-center" role="alert">
+                  <span class="mx-3">{{ message }}</span>
+                  <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% elif category == 'category_deleted' %}
+                <div class="alert  alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+                  <span class="mx-3">{{ message }}</span>
+                  <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
+
+      <!-- DISPLAY CATEGORY FORM -->
+        {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+    </div>
     <table class="table table-striped shadow table-hover py-3">
       <thead>
         <tr>
@@ -267,6 +362,36 @@
 <section class="admin-details-section">
   <div class="container px-4 py-3 admin-table">
     <h3 class="text-center pb-3">Todos as FAQs</h3>
+    <div class="col-lg-8 col-md-10 py-4 px-3 mx-auto my-3 rounded shadow bg-light">
+      <h4>Novas perguntas</h4>
+      <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
+      <div class="container w-75">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              {% if category == 'question_duplicate' %}
+                <div class="alert  alert-danger alert-dismissible fade show d-flex justify-content-center" role="alert">
+                  <span class="mx-3">{{ message }}</span>
+                  <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% elif category == 'question_added' %}
+                <div class="alert  alert-info alert-dismissible fade show d-flex justify-content-center" role="alert">
+                  <span class="mx-3">{{ message }}</span>
+                  <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% elif category == 'question_deleted' %}
+                <div class="alert  alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
+                  <span class="mx-3">{{ message }}</span>
+                  <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
+      <!-- DISPLAY LOGIN FORM -->
+        {{ render_form(question_form, novalidate=True, button_map={"submit": "primary"}) }}
+    </div>
     <table class="table table-striped shadow table-hover py-3">
       <thead>
         <tr>

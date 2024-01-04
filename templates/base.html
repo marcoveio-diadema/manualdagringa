@@ -185,7 +185,7 @@
                   </ul>
               </div>
               <div class="container px-4 px-lg-5">
-                  <div class="small text-center pt-3 border-top text-muted fst-italic">Copyright &copy; Manual da Gringa 2023</div>
+                  <div class="small text-center pt-3 border-top text-muted fst-italic" id="copyright"></div>
               </div>
           </div>
       </div>
@@ -202,6 +202,13 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      // jQuery to get the current year and update the copyright notice
+      $(document).ready(function () {
+          var currentYear = new Date().getFullYear();
+          $('#copyright').html('Copyright &copy; Manual da Gringa - ' + currentYear);
+      });
+    </script>
     {% block script %}{% endblock %}
   </body>
 </html>
