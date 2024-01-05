@@ -27,39 +27,27 @@
       <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-10 col-lg-8 col-xl-7">
+                  
               <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
-              {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
-                           <span class="mx-5">{{ message }}</span>
-                          <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-                          </button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-             {% endwith %}
-            <p>
+              <div class="ajax-message-container">
+                
+              </div>
+            <p class="bg-light px-3 py-3 py-lg-4 px-lg-5 rounded shadow">
               Entre em contato para dicas, reclamações e possíveis parcerias também!
             </p>
             <div class="my-5">
-              <!-- * * * * * * * * * * * * * * *-->
-              <form id="contactForm" name="sentMessage" action="{{ url_for('contato') }}" method="post">
-                <div class="form-floating">
-                  <input class="form-control" id="name" name="name" type="text" placeholder="Seu nome..." required />
-                  <label for="name">Name</label>
-                </div>
-                <div class="form-floating">
-                  <input class="form-control" id="email" name="email" type="email" placeholder="Seu email..." required />
-                  <label for="email">Email address</label>
-                </div>
-                <div class="form-floating">
-                  <textarea class="form-control" id="message" name="message" placeholder="Sua mensagem aqui..." required
-                    style="height: 12rem"></textarea>
-                  <label for="message">Message</label>
-                </div>
-                <br />
-                <button class="btn btn-custom text-uppercase" id="submitButton" type="submit">Enviar!</button>
+              <!-- CONTACT FORM -->
+              <form method="POST" id="contactForm" action="{{ url_for('contato') }}">
+                {{ form.hidden_tag() }}
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control rounded") }}
+                <br>
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control rounded") }}
+                <br>
+                {{ form.message.label(class="form-label") }}
+                {{ form.message(class="form-control rounded") }}
+                <button type="submit" class="btn btn-custom mx-5 my-3">Enviar!</button>
               </form>
             </div>
           </div>
@@ -69,6 +57,6 @@
 </section>
 
 
-
-
 {% endblock %}
+
+{% block script%}{% endblock %}

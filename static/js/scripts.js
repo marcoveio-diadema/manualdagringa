@@ -79,3 +79,67 @@ $(document).ready(function () {
           });
       });
   });
+
+
+
+  // ALERT MESSAGES FOR CONTACT FORM //
+
+$(document).ready(function () {
+    $('#contactForm').submit(function (event) {
+        event.preventDefault();  // Prevent the default form submission
+
+        // CSRF Token
+        var csrf_token = "{{ csrf_token() }}";
+
+        // Get form data
+        var formData = $(this).serialize();
+
+        // Reference to the message container
+        var messageContainer = $('.ajax-message-container');
+
+        // Perform AJAX request
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: formData,
+            success: function (response) {
+                // Handle the response here
+                console.log(response);
+
+                // Display the appropriate message based on the status
+                if (response.status === 'success') {
+                    messageContainer.html('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                        '<strong>Sucesso!</strong> ' + response.message +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                        '</div>');
+
+                    // Optionally, clear the form fields
+                    $('#contactForm')[0].reset();
+                } else if (response.status === 'error') {
+                    messageContainer.html('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                        '<strong>Erro!</strong> ' + response.message +
+                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                        '</div>');
+                }
+            },
+            error: function (error) {
+                // Handle the error response here
+                console.error(error);
+
+                // Display a generic error message
+                messageContainer.html('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                    '<strong>Erro!</strong> Ocorreu um erro ao enviar a mensagem. Tente novamente.' +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                    '</div>');
+            }
+        });
+    });
+    // CSRF TOKEN
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+});

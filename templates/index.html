@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% from "bootstrap5/form.html" import render_form %}
 {% block title %}Home{% endblock%}
 
 {% block content %}
@@ -164,7 +163,7 @@
             <!-- Newsletter Form -->
              
             <form method="POST" class="subscribe-form" action="{{ url_for('subscribe', source='index') }}">
-                {{ form.hidden_tag() }}
+                {{ form.hidden_tag() }}                
                 {{ form.email.label }}
                 {{ form.email }}
                 <button type="submit" class="btn btn-custom mx-5 my-3">Confirmar!</button>
@@ -176,6 +175,4 @@
 
 {% endblock %}
 
-{% block script %}
-
-{% endblock%}
+{% block script %}{% endblock%}

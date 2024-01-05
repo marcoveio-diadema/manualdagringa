@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% from "bootstrap5/form.html" import render_form %}
 {% block title %}Sobre Nós{% endblock%}
 
 {% block content %}
@@ -23,31 +22,39 @@
 
 
 <section class="section-faqs py-5">
-    <main class="mb-4">
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 text-center">
-                    <hr>
-                    {% for question in questions %}
-                    <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ question.id }}" aria-expanded="true" aria-controls="collapse{{ question.id }}">
-                                {{ question.question }}
-                            </button>
-                            </h2>
-                            <div id="collapse{{ question.id }}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <span>{{ question.answer }}</span>
-                                </div>
-                            </div>
-                        </div>      
-                    </div>
-                    {% endfor %} 
+  <main class="mb-4">
+    <div class="container px-4 px-lg-5">
+      <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 text-center">
+          <hr>
+          {% for question in questions %}
+          <div class="accordion" id="accordionFaqs">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ question.id }}" aria-expanded="true" aria-controls="collapse{{ question.id }}">
+                    {{ question.question }}
+                </button>
+              </h2>
+              <div id="collapse{{ question.id }}" class="accordion-collapse collapse show" data-bs-parent="#accordionFaqs">
+                <div class="accordion-body">
+                  <span>{{ question.answer }}</span>
                 </div>
-            </div>
+              </div>
+            </div>      
+          </div>
+          {% endfor %}
+          <hr> 
         </div>
-    </main>
+        <!-- CONTACT IF ANSWER NOT FOUND -->
+        <div class="container px-4 px-lg-5 text-center">
+          <h4 class="py-3 px-3">Não achou a resposta que estava procurando?</h4>
+          <p>
+            Mande uma mensagem aqui: <a href="{{url_for('contato')}}" class="btn btn-custom text-uppercase mx-3">Contato</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
 </section>
 
 {% endblock%}

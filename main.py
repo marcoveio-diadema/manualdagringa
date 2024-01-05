@@ -724,28 +724,42 @@ def subscribe():
 
 # CONTACT ROUTE
 
-MY_EMAIL = "MY_EMAIL"
-MY_PASSWORD = "MY_PASSWORD"
+# Function to send email
+def send_email(name, email, message):
+    
+    MY_EMAIL = "MY_EMAIL"
+    MY_PASSWORD = "SOME_PASSWORD"
+    RECEIVER = "ANOTHER_EMAIL"
+
+    with smtplib.SMTP("smtp.gmail.com") as connection:
+        connection.starttls()
+        connection.login(user=MY_EMAIL, password=MY_PASSWORD)
+        connection.sendmail(
+            from_addr=MY_EMAIL,
+            to_addrs=RECEIVER,
+            msg=f"Subject:Novo contato! \n\n Email sent by:{name}\nEmail:{email}\nMensagem:\n{message}"
+        )
 
 
 @app.route('/contato', methods=['POST', 'GET'])
 def contato():
-    if request.method == 'POST':
-        name = request.form.get("name")
-        email = request.form.get("email")
-        message = request.form.get("message")
+     # form
+    form = ContactForm()
 
-        flash("Obrigado pela mensagem, responderemos em breve!", "success")
+    if form.validate_on_submit():
+        name=form.name.data
+        email=form.email.data
+        message=form.message.data
 
-        with smtplib.SMTP("smtp.gmail.com") as connection:
-            connection.starttls()
-            connection.login(user=MY_EMAIL, password=MY_PASSWORD)
-            connection.sendmail(
-                from_addr=MY_EMAIL,
-                to_addrs="OTHER_EMAIL",
-                msg=f"Subject:Novo contato! \n\n Email sent by:{name}\nEmail:{email}\nMensagem:\n{message}")
+        # Simulate form validation
+        if not name or not email or not message:
+            return jsonify({"status": "error", "message": "Por favor, preencha todos os campos do formulário."})
 
-    return render_template("contato.html")
+        send_email(name, email, message)
+
+        return jsonify({"status": "success", "message": "Mensagem enviada com sucesso!"})
+
+    return render_template("contato.html", form=form)
 
 
 # ABOUT ROUTE
