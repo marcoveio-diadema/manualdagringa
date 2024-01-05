@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, abort, render_template, redirect, url_for, flash, request
+from flask import Flask, abort, render_template, redirect, url_for, flash, request, jsonify
 from flask_bootstrap import Bootstrap5
 from flask_gravatar import Gravatar
 from flask_ckeditor import CKEditor
@@ -699,8 +699,8 @@ def subscribe():
 
         if subscribed_user:
             # User already exists
-            flash("Email já esta cadastrado, use outro!", "danger")
-            return redirect(url_for('blog'))
+            # flash("Email já esta cadastrado, use outro!", "danger")
+             return jsonify({"status": "error", "message": "Email já está cadastrado, use outro!"})
 
         # Create a new Names instance and add it to the database
         new_subscriber = Subscribe(
@@ -709,14 +709,15 @@ def subscribe():
 
         db.session.add(new_subscriber)
         db.session.commit()
-        flash("Email cadastrado com sucesso!", "success")
+        # flash("Email cadastrado com sucesso!", "success")
 
         # Determine the redirect destination based on the source parameter
         source = request.args.get('source', 'index')
         if source == 'blog':
-            return redirect(url_for('blog'))
+            return jsonify({"status": "success", "message": "Email cadastrado com sucesso!"})
         else:
-            return redirect(url_for('home'))
+            return jsonify({"status": "success", "message": "Email cadastrado com sucesso!"})
+
         
     return render_template("index.html", form=form, all_posts=posts)
 

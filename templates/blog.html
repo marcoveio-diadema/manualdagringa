@@ -102,18 +102,11 @@
                  <!-- Newsletter Form -->
                    
               <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
-              {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                  {% for category, message in messages %}
-                  <div class="alert {% if category == 'success' %}alert-success{% elif category == 'danger' %}alert-danger{% endif %} alert-dismissible fade show d-flex justify-content-center" role="alert">
-                    <span class="mx-3">{{ message }}</span>
-                    <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                  {% endfor %}
-                {% endif %}
-              {% endwith %}
-                 
-                <form method="POST" id="subscribe-form" action="{{ url_for('subscribe', source='blog') }}" class="text-center">
+              <div class="ajax-message-container">
+                
+              </div>
+                <!-- FORM -->                 
+                <form method="POST" class="subscribe-form" action="{{ url_for('subscribe', source='blog') }}" class="text-center">
                     {{ form.hidden_tag() }}                   
                     {{ form.email.label }}
                     {{ form.email }}
@@ -126,6 +119,59 @@
     </div>
 </section>
 
+{% endblock %}
 
+{% block script %}
+
+<script>
+  $(document).ready(function () {
+      $('.subscribe-form').submit(function (event) {
+          event.preventDefault();  // Prevent the default form submission
+
+          // Get form data
+          var formData = $(this).serialize();
+
+          // Reference to the message container
+          var messageContainer = $('.ajax-message-container');
+
+          // Perform AJAX request
+          $.ajax({
+              type: 'POST',
+              url: $(this).attr('action'),
+              data: formData,
+              success: function (response) {
+                  // Handle the response here
+                  console.log(response);
+
+                  // Display the appropriate message based on the status
+                  if (response.status === 'success') {
+                      messageContainer.html('<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                          '<strong>Sucesso!</strong> ' + response.message +
+                          '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                          '</div>');
+
+                      // Optionally, clear the form fields
+                      $('.subscribe-form')[0].reset();
+                  } else if (response.status === 'error') {
+                      messageContainer.html('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                          '<strong>Erro!</strong> ' + response.message +
+                          '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                          '</div>');
+                  }
+              },
+              error: function (error) {
+                  // Handle the error response here
+                  console.error(error);
+
+                  // Display a generic error message
+                  messageContainer.html('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                      '<strong>Erro!</strong> Ocorreu um erro ao cadastrar o email. Tente novamente.' +
+                      '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                      '</div>');
+              }
+          });
+      });
+  });
+</script>
 
 {% endblock %}
