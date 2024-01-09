@@ -292,8 +292,8 @@ def show_post(post_id, slug):
     # only allow logged-in users to comment
     if comment_form.validate_on_submit():
         if not current_user.is_authenticated:
-            flash("Você precisa fazer o login ou se registrar para comentar nos posts.", "danger")
-            return redirect(url_for("login"))
+            return jsonify({"error": "Authentication required"})
+
 
         new_comment = Comment(
             text=comment_form.comment_text.data,
@@ -303,11 +303,24 @@ def show_post(post_id, slug):
         db.session.add(new_comment)
         db.session.commit()
 
-        # Reset the comment text area after submitting the comment
-        comment_form.comment_text.data = ''
+         # Construct a dictionary with the necessary data
+        comment_data = {
+            "text": new_comment.text,
+            "posted_date": new_comment.posted_date.strftime('%d %B, %Y'),
+            "comment_author_name": new_comment.comment_author.name,
+            "comment_author_gravatar": gravatar(new_comment.comment_author.email),
+            "comment_id": new_comment.id,
+        }
+
+        return jsonify({"success": True, 
+                        "comment_data": comment_data,
+                        "is_authenticated": current_user.is_authenticated,
+                        })
+
 
     # Fetch comments associated with the post
     comments = Comment.query.filter_by(post_id=post_id).all()
+
 
     return render_template("post.html", post=requested_post, current_user=current_user,
                            form=comment_form, comments=comments, other_posts=other_posts, all_categories=categories)
@@ -491,9 +504,9 @@ def logout():
 def delete_comment(comment_id):
     comment_to_delete = Comment.query.get(comment_id)
 
-     # Default values for post_id and slug
-    post_id = None
-    slug = None
+    # default fvalues for post and slug
+    post_id = request.args.get("post_id")
+    slug = request.args.get("slug")
 
     if comment_to_delete:
         # Check if the current user is the author of the comment
@@ -504,17 +517,15 @@ def delete_comment(comment_id):
             db.session.delete(comment_to_delete)
             db.session.commit()    
 
-            # Check if the delete request came from the admin template
-            if "from_admin" in request.args and request.args["from_admin"] == "true":
-                # Redirect back to the admin page
-                flash('Comentario deletado da base de dados com sucesso!', 'comment_deleted')
-                return redirect(url_for("admin"))
-            else:
-                # Redirect back to the post page
-                return redirect(url_for("show_post", post_id=post_id, slug=parent_post.slug))
+             # Check if the delete request came from the admin template
+            from_admin = request.args.get("from_admin") == "true"
+
+            # Return a JSON response
+            return jsonify({"fromAdmin": from_admin, "redirectUrl": url_for("admin") if from_admin else url_for("show_post", post_id=post_id, slug=parent_post.slug)})
         
-    flash("Comment not found.", category='comment_danger')
-    return redirect(url_for("home"))
+    
+      # Return an empty response for unsuccessful deletion
+    return jsonify({})
 
 
 # DELETE POST
@@ -727,9 +738,9 @@ def subscribe():
 # Function to send email
 def send_email(name, email, message):
     
-    MY_EMAIL = "MY_EMAIL"
-    MY_PASSWORD = "SOME_PASSWORD"
-    RECEIVER = "ANOTHER_EMAIL"
+    MY_EMAIL = "marcoveioannecy@gmail.com"
+    MY_PASSWORD = "fmvujwkhqzgotoru"
+    RECEIVER = "marcoveioarts@gmail.com"
 
     with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()

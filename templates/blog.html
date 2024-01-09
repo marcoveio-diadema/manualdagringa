@@ -60,7 +60,7 @@
             {% if current_user.id == 1 %}
           <div class="d-flex justify-content-end my-4">
             <a
-              class="btn btn-primary float-right"
+              class="btn btn-primary float-right mx-4"
               href="{{ url_for('create_post') }}"
               >Create New Post</a
             >
@@ -68,7 +68,7 @@
             {% endif %}
         <!-- TO USE REACT IN ORDER TO SHOW 10 POSTS PER TIME -->
           <div class="d-flex justify-content-end mb-4">
-            <a class="btn btn-secondary text-uppercase" href="#!">Outros Posts ↓</a>
+            <a class="btn btn-secondary text-uppercase mx-5" href="#!">Outros Posts ↓</a>
           </div>
         </div>
     
@@ -102,16 +102,17 @@
                  <!-- Newsletter Form -->
                    
               <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
-              <div class="ajax-message-container">
-                
+              <div class="ajax-message-container">                
               </div>
-                <!-- FORM -->                 
-                <form method="POST" class="subscribe-form" action="{{ url_for('subscribe', source='blog') }}" class="text-center">
-                    {{ form.hidden_tag() }}                                       
-                    {{ form.email.label }}
-                    {{ form.email }}
-                    <button type="submit" class="btn btn-custom mx-5 my-3">Confirmar!</button>
-                </form>
+
+              <!-- FORM -->                 
+              <form method="POST" class="subscribe-form" action="{{ url_for('subscribe', source='blog') }}" class="text-center">
+                  {{ form.hidden_tag() }}
+                  {{ form.csrf_token }}                                       
+                  {{ form.email.label }}
+                  {{ form.email }}
+                  <button type="submit" class="btn btn-custom mx-5 my-3">Confirmar!</button>
+              </form>
             <hr>
         
         </div>

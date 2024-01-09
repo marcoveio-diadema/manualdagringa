@@ -83,8 +83,28 @@
               {% endif %}
             
             <!-- Comments Area -->
-              {{ ckeditor.load() }} {{ ckeditor.config(name='comment_text') }}
-              {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+              {% if current_user.is_authenticated %}
+              <!-- COMMENT FORM -->
+              <form method="POST" id="commentForm" data-post-id="{{ post.id }}" data-post-slug="{{ post.slug }}">
+                {{ form.hidden_tag() }}
+                {{ form.comment_text.label(class="form-label") }}
+                {{ form.comment_text(class="form-control rounded") }}
+                <button type="submit" class="btn btn-custom mx-5 my-3">Enviar!</button>
+              </form>
+              {% else %}
+              <div class="container">
+                <div class="row d-flew justify-content-center">
+                  <h4 class="text-center">Quer comentar nos nossos posts?</h4>
+                    <p class="text-center">Faça seu login ou se registre no Manual da Gringa para participar</p>
+                  <div class="col-md-3">
+                    <a href="{{ url_for('login')}}" class="btn btn-custom" target="_blank">Entrar</a>
+                  </div>
+                  <div class="col-md-3">
+                    <a href="{{ url_for('sign_up')}}" class="btn btn-custom" id="comment-button" target="_blank">Inscrever-se</a>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
                 
               
             <div class="comment">
@@ -92,19 +112,19 @@
               <ul class="commentList">
                   <!-- Show all comments -->
                   {% for comment in post.comments | sort(attribute='posted_date', reverse=True) %}
-                <li class="border rounded">
+                <li id="comment-{{ comment.id }}" class="border rounded">
                   <div class="commenterImage">
                     <img src="{{comment.comment_author.email | gravatar}}">
                   </div>
                   <div class="commentText">
                       <p>{{comment.text|safe}} </p>
                     <span class="date sub-text">
-                        {{comment.posted_date.strftime('%B %d, %Y')}}
+                        {{comment.posted_date.strftime('%d %B, %Y')}}
                         by <strong>{{comment.comment_author.name}} </strong></span>
                       <!-- ALLOW TO DELETE COMMENT IF SAME USER WHO CREATED AND IS LOGGED IN -->
                       {% if current_user.is_authenticated and current_user.id == comment.comment_author.id or current_user.id == 1 %}
                       <span>
-                          <a href="{{ url_for('delete_comment', comment_id=comment.id) }}" class="btn btn-link text-danger"> Delete </a>
+                        <a href="#" class="btn btn-link text-danger delete-comment" data-comment-id="{{ comment.id }}"> Delete </a>
                       </span>
                       {% endif %}
                   </div>

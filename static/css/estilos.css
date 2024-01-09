@@ -141,6 +141,14 @@ p, span, ul, li {
     background-color: #F5F5F5 !important;
 }
 
+#comment-button {
+    background-color: #4682A9 !important;
+}
+
+#comment-button:hover {
+    background-color: #30475E !important;
+}
+
 /* NEW OR EDIT POST */
 
 .section-new-post {

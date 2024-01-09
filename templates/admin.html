@@ -252,21 +252,7 @@
 <section class="admin-details-section">
   <div class="container px-4 py-3 admin-table">
     <h3 class="text-center pb-3">Todos os comentarios</h3>
-    <!-- CHECK IF THERE ARE MESSAGES AND SHOW IF SO -->
-    <div class="container w-75">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-          {% if category == 'comment_deleted' %}
-            <div class="alert alert-success alert-dismissible fade show d-flex justify-content-center" role="alert">
-              <span class="mx-5">{{ message }}</span>
-              <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
-              </button>
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% endwith %}
-    </div>
-    <table class="table table-striped shadow table-hover py-3">
+     <table class="table table-striped shadow table-hover py-3">
       <thead>
         <tr>
           <th scope="col">Id</th>
@@ -289,7 +275,9 @@
           </td>
           <td>{{ comment.posted_date.strftime('%d-%m-%Y') }}</td>
           <td>
-            <a href="{{ url_for('delete_comment', comment_id=comment.id, from_admin=true) }}" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a>
+            <a href="#" class="text-danger delete-comment" data-comment-id="{{ comment.id }}">
+              Delete
+            </a>            
           </td>
         </tr>
         {% endfor %}
@@ -389,7 +377,7 @@
           {% endif %}
         {% endwith %}
       </div>
-      <!-- DISPLAY LOGIN FORM -->
+      <!-- DISPLAY FAQ FORM -->
         {{ render_form(question_form, novalidate=True, button_map={"submit": "primary"}) }}
     </div>
     <table class="table table-striped shadow table-hover py-3">
@@ -417,5 +405,42 @@
   </div>
   <hr>
 </section>
+
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function() {
+    // Attach a click event to the delete comment links in the admin section
+    $(".admin-table").on("click", ".delete-comment", function(e) {
+      e.preventDefault(); // Prevent the default link behavior
+
+      var commentId = $(this).data("comment-id"); // Get the comment ID
+      var deleteUrl = "/delete-comment/" + commentId + "?from_admin=true";
+
+
+      // Save a reference to the current row
+      var currentRow = $(this).closest("tr");
+
+      // Send an AJAX request to delete the comment
+      $.ajax({
+        url: deleteUrl,
+        type: "POST",
+        success: function(response) {
+           // Check if the comment was deleted successfully
+            if (response.fromAdmin) {
+              // Remove the deleted comment row from the table
+              currentRow.remove();
+            } else {
+              console.error("Comment deletion unsuccessful");
+            }          
+        },
+        error: function(error) {
+          console.error("Error deleting comment:", error);
+        }
+      });
+    });
+  });
+</script>
 
 {% endblock %}
