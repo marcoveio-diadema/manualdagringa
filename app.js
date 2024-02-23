@@ -17,8 +17,20 @@ app.set('view engine', 'ejs');
 
 // GET - home
 app.get('/', (req, res) => {
-    res.render('index.ejs');
+    res.render('index.ejs', { title: 'Página inicial'});
 })
+
+// GET - about
+app.get('/about', (req, res) => {
+    res.render('about.ejs', { title: 'Sobre Nós'});
+})
+
+// GET - about
+app.get('/contact', (req, res) => {
+    res.render('contact.ejs', { title: 'Contato'});
+})
+
+
 // app listener
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

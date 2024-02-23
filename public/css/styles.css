@@ -58,6 +58,7 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="search"],
+input[type="textarea"]
 select,
 textarea {
     font-family: "Roboto", sans-serif;
@@ -67,6 +68,19 @@ textarea {
     margin: 0 0.5rem 0 0.5rem;
     border-radius: var(--border-radius);
     color: var(--gray);
+}
+
+textarea:is(:focus, :valid){
+    border-color: var(--mid-blue);
+    border-width: 2px;
+}
+
+textarea {
+    width: 80%;
+    min-height: 200px;
+}
+textarea::-webkit-scrollbar{
+    width: 0px;
 }
 
 img {
@@ -105,12 +119,13 @@ nav {
 }
 
 
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 1200px) {
     nav {
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-areas: "logo menu button";
         padding: 20px 60px 20px 60px;
     }
+
 }
 
 .nav-logo {
@@ -123,7 +138,7 @@ nav {
 .menu {
     grid-area: menu;
     display: flex;
-    justify-content: start;
+    justify-content: center;
 }
 
 .dropdown {
@@ -223,7 +238,7 @@ nav ul {
 
 .sidebar-links {
     position: absolute;
-    top: 8%;
+    top: 80%;
     bottom: auto;
     right: 0;
     left: 0;
@@ -277,7 +292,6 @@ nav ul {
 /* heading section */
 .section-heading {
     position: relative;
-    background-image: url("../img/GOPR1432.JPG");
     height: 700px;
     width: 100%;
     background-position: center;
@@ -766,4 +780,78 @@ footer {
         font-size: 1rem;
     }
     
+}
+
+/* ABOUT and CONTACT PAGE */
+.section-about {
+    padding: 2rem;
+    margin: 0 auto;
+    max-width: 80%;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.about-page-img{
+    max-width: 50%;
+    height: auto;
+    margin: auto;
+    padding: 1rem;
+}
+
+.section-contact{
+    padding: 2rem;
+    margin: 0 auto;
+    max-width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-group {
+    position: relative;
+    margin: 1rem 0;
+}
+
+.input-group label{
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    padding: 0 5px;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+.input-group input {
+    width: 80%;
+    height: 40px;
+    padding: 0 10px;
+    background-color: transparent;
+    border: 1px solid var(--gray);
+    outline: none;
+    border-radius: var(--border-radius);
+}
+
+.input-group input:focus~label,
+.input-group input:valid~label {
+    top: 0;
+    font-size: 0.8rem;
+    background-color: white;
+}
+
+.textarea-form{
+    width: 100%;
+}
+
+.textarea-form textarea {
+    margin: 2rem 0;
+    outline: none;
+    resize: none;
+}
+
+.submit-button{
+    display: flex;
+    justify-content: center;
 }
