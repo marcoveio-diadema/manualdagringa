@@ -1,5 +1,5 @@
 :root {
-    --black: #161A30;
+    --black: #494746;
     --gray: #7e7e7e;
     --gray-light: #F2F2F2;
     --mid-blue: #4682A9;
@@ -328,8 +328,9 @@ nav ul {
 
 .index-text {
     color: var(--gray-light);
-    text-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 0 5px var(--gray);
     text-align: center;
+    padding: 2rem;
 }
 
 #landing-icon {
@@ -627,8 +628,8 @@ nav ul {
 
 .side-container{
     width: 90%;
-    margin: 1rem;
-    padding: 1rem;
+    margin: 0.5rem;
+    padding: 0 1rem;
     border-radius: var(--border-radius);
     border:none;
     box-shadow: 0px 0px 15px var(--gray-light);
@@ -800,7 +801,7 @@ footer {
     padding: 1rem;
 }
 
-.section-contact{
+.section-contact, .section-create-post{
     padding: 2rem;
     margin: 0 auto;
     max-width: 80%;
@@ -842,7 +843,14 @@ footer {
 }
 
 .textarea-form{
-    width: 100%;
+    width: 90%;
+}
+
+@media only screen and (max-width:768px){
+    .textarea-form{
+        width: 100%;
+        padding: 1rem;
+    }
 }
 
 .textarea-form textarea {
@@ -854,4 +862,82 @@ footer {
 .submit-button{
     display: flex;
     justify-content: center;
+}
+
+/* CREATE/EDIT POST */
+.create-post-form {
+    display: flex;
+    justify-content: center;
+}
+
+.create-post {
+    display: grid;
+    justify-content: center;
+}
+
+.create-post input {
+    margin: 1rem 0;
+}
+
+
+/* POST PAGE */
+
+.post-details{
+    position: relative;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    padding: 0 1rem;
+    margin: 0 auto;
+    grid-template-areas: 
+    "details share";
+    background-color: white;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.author-date {
+    grid-area: details;
+    display: grid;
+    justify-content: start;
+    padding: 0 1rem;
+    line-height: 1.5rem;
+    color: var(--black);
+}
+
+.sharing-icons {
+    grid-area: share;
+    display: grid;
+    justify-content: end;
+    padding: 0 1rem;
+}
+
+.left-column ul {
+    list-style-type: none;
+    display: flex;
+    gap: 2rem;
+    padding: 0;
+}
+
+.post{
+    max-width: 90%;
+    margin: 0 auto;
+    line-height: 1.7rem;
+}
+
+.post-images{
+    max-width: 90%;
+    height: auto;
+    margin: 0 auto;
+    padding: 1rem 0;
+}
+
+@media only screen and (max-width:768px) {
+    .post{
+        max-width: 95%;
+    }
+
+    .post-images{
+        max-width: 100%;
+    }
 }

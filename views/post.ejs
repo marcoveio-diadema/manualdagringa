@@ -1,0 +1,99 @@
+<!-- SECTION HEADER -->
+<section class="section-heading" style="background-image: url(../img/GOPR1432.JPG);">
+    <!-- text on landing page -->
+    <div class="landing-page">
+        <h1 class="index-text"><%= post.title %></h1>
+    </div>
+</section>
+
+<!-- SECTION BLOG -->
+<section class="section-main">
+    <div class="row blog-content">
+        <!-- LEFT COLUMN MD/LG SCREEN -->
+        <div class="left-column">
+            <div class="container-header">
+                <!-- intro -->
+                <h4><%= post.intro %></h4>
+            </div>
+            <div class="post-details">
+                <div class="author-date">
+                    <!-- author and date -->
+                    <p>Por: <strong>Marquinhos</strong>
+                    <br>
+                    <i class="fa-regular fa-calendar"></i> 10/10/2010
+                    </p>
+                </div>
+                <div class="sharing-icons">
+                    <ul>
+                        <li><a href="" target="_blank"><i class="fa-brands fa-twitter fa-lg"></i></a></li>
+                        <li><a href="" target="_blank"><i class="fa-brands fa-whatsapp fa-lg"></i></a></li>                        
+                        <li><a href="" target="_blank"><i class="fa-brands fa-facebook fa-lg"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- post details -->
+            <div class="post">
+                <p><%- post.body %></p>
+                <div class="post-images">
+                    <img src="/img/qt.jpg" alt="">
+                </div>
+                <p><%- post.body %></p>
+            </div>
+            
+            <hr class="hr-line" id="posts-hr">       
+        </div>
+        <!-- RIGHT COLUMN MD/LG SCREEN -->
+        <div class="right-column">
+            <!-- search bar -->
+            <div class="side-container">
+                <div class="container-header">
+                    <h4>Busca rápida:</h4>
+                </div>
+                <!-- search form -->
+                <form action="">
+                    <div class="wrapper blog-page">
+                        <input type="text" placeholder="Search here">
+                        <button type="submit">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!-- per category -->
+            <div class="side-container">
+                <div class="container-header">
+                    <h4>Por categoria:</h4>
+                </div>
+                <ul class="categories-list">
+                    <li><a href="#">Category 1</a></li>
+                    <li><a href="#">Catefory 2</a></li>
+                    <li><a href="#">Catefory 3</a></li>
+                </ul>
+            </div>            
+            <!-- subscribe form -->
+            <div class="side-container">
+                <div class="container-header">
+                    <h4>Receba a nossa newsletter:</h4>
+                </div>
+                <div class="subscribe">
+                    <input type="text" placeholder="Digite seu email">
+                    <button type="submit">
+                        <i class="fa-regular fa-envelope"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- about -->
+            <div class="side-container">
+                <div class="container-header">
+                    <h4>Sobre o autor:</h4>
+                </div>
+                <div class="author-image">
+                    <img src="/img/marcus_1.jpg" alt="" id="about-img">
+                </div>
+                <div class="author-description">
+                    <p class="author-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel itaque fugiat tempore asperiores neque mollitia saepe harum deserunt. Mollitia ratione quam a odit earum exercitationem quia accusamus? Quis, omnis dolores. Maxime inventore velit facere assumenda, nobis alias ab quidem incidunt minima, mollitia pariatur itaque error non qui, obcaecati fugiat reprehenderit at? Repudiandae minima illum fugiat in dolorem voluptatem voluptatibus eveniet, vel maiores facere, id aut provident sit laborum, officiis earum sapiente ratione! Ipsa, non odit quisquam magni ullam praesentium? Sit minima totam optio alias autem! Excepturi reiciendis quae, ea aut rem autem earum tempora alias. Iste placeat quas accusamus. Iste!</p>
+                </div>
+            </div>           
+        </div>
+    </div>
+</section>

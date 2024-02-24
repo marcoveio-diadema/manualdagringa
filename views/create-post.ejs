@@ -1,0 +1,28 @@
+<!-- section create post -->
+<section class="section-create-post">
+    <div class="post-container">
+        <h4>
+            Está inspirado? Escreve aí!!
+        </h4>
+        <div class="create-post-form">
+            <form action="/create-post" method="POST" enctype="multipart/form-data">
+                <div class="create-post">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title" required>
+                   
+                    <label for="intro">Intro</label>   
+                    <input type="text" name="intro" id="intro" required>
+
+                    <label for="image">Image</label>
+                    <input type="file" name="image" id="image">
+                    
+                    <label for="body">Content</label>
+                    <textarea name="body1" class="tiny-mce" id="body"></textarea>
+                </div>
+                <div class="submit-button">
+                    <button type="submit" class="btn">Postar</button>                  
+                </div>                
+            </form>
+        </div>
+    </div>
+</section>
