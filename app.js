@@ -3,6 +3,7 @@ import express from "express";
 import expressLayout from "express-ejs-layouts";
 import bodyParser from "body-parser";
 import sanitizeHtml from 'sanitize-html';
+import multer from 'multer';
 
 
 // initiate app and ports
@@ -11,6 +12,9 @@ const port = 3000;
 
 // import db
 import db from './db/db.js';
+
+// import upload image
+import uploadImage from './config.js';
 
 // middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,6 +25,8 @@ app.use(expressLayout);
 app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
 
+// multer storage
+const upload = multer({ dest: 'uploads/' });
 
 // GET - home
 app.get('/', async (req, res) => {
@@ -49,14 +55,17 @@ app.get('/create-post', (req, res) => {
 });
 
 // POST - create post
-app.post('/create-post', async(req, res) => {
+app.post('/create-post', upload.single('image'), async(req, res) => {
+    // Upload the image to Google Cloud Storage
+    const imageUrl = await uploadImage(req.file);
+    // other data from form
     const title = req.body["title"];
     const intro = req.body["intro"];
     const body = sanitizeHtml(req.body["body1"]);
 
     try {
         // Insert the post into the database
-        const result = await db.query('INSERT INTO posts (title, intro, body) VALUES ($1, $2, $3) RETURNING *', [title, intro, body ]);
+        const result = await db.query('INSERT INTO posts (title, intro, body, img_url) VALUES ($1, $2, $3, $4) RETURNING *', [title, intro, body, imageUrl ]);
         const newPost = result.rows[0];
     
         // Redirect to the post page
