@@ -14,7 +14,8 @@ const port = 3000;
 import db from './db/db.js';
 
 // import upload image
-import uploadImage from './config.js';
+import config from './config.js';
+const { uploadImage, customSanitizeHtml } = config;
 
 // middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -61,7 +62,7 @@ app.post('/create-post', upload.single('image'), async(req, res) => {
     // other data from form
     const title = req.body["title"];
     const intro = req.body["intro"];
-    const body = sanitizeHtml(req.body["body1"]);
+    const body = customSanitizeHtml(req.body["body1"]);
 
     try {
         // Insert the post into the database

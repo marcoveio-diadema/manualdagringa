@@ -1,5 +1,5 @@
 <!-- SECTION HEADER -->
-<section class="section-heading" style="background-image: url(../img/GOPR1432.JPG);">
+<section class="section-heading" style="background-image: url(<%= post.img_url %>);">
     <!-- text on landing page -->
     <div class="landing-page">
         <h1 class="index-text"><%= post.title %></h1>
@@ -11,7 +11,7 @@
     <div class="row blog-content">
         <!-- LEFT COLUMN MD/LG SCREEN -->
         <div class="left-column">
-            <div class="container-header">
+            <div class="container-header" id="post-header">
                 <!-- intro -->
                 <h4><%= post.intro %></h4>
             </div>
@@ -33,10 +33,6 @@
             </div>
             <!-- post details -->
             <div class="post">
-                <p><%- post.body %></p>
-                <div class="post-images">
-                    <img src="<%= post.img_url %>" alt="Post Image">
-                </div>
                 <p><%- post.body %></p>
             </div>
             

@@ -358,6 +358,7 @@ nav ul {
     margin-bottom: 0.75rem;
 }
 
+
 .left-column{
     margin: 0 auto;
     flex-grow: 1;
@@ -387,6 +388,7 @@ nav ul {
 .card-body {
     position: relative;
     padding: 1rem;
+    text-align: left;
 }
 
 .card{
@@ -413,6 +415,13 @@ nav ul {
 
 .card-category{
     color: var(--orange);
+}
+
+.card-header span,
+.card-header h4,
+.card-header p {
+  margin: 0.75rem 0;
+  padding: 0;
 }
 
 .card-details {
@@ -484,10 +493,6 @@ nav ul {
     .card-img{
         max-width: 100%;
         height: auto;
-    }
-
-    .card-header{
-        padding: 0.75rem;
     }
 
     .author, .date, .read-more-link {
@@ -923,13 +928,22 @@ footer {
     max-width: 90%;
     margin: 0 auto;
     line-height: 1.7rem;
+    text-align: left;
 }
 
-.post-images{
-    max-width: 90%;
+#post-header{
+    text-align: left;
+}
+
+#post-header h4{
+    color: var(--black);
+}
+
+.post img{
+    max-width: 80%;
     height: auto;
-    margin: 0 auto;
-    padding: 1rem 0;
+    display: block;
+    margin: 1.5rem auto;
 }
 
 @media only screen and (max-width:768px) {

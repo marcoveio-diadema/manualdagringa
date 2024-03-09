@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { Storage } from '@google-cloud/storage';
 import path from 'path';
+import sanitizeHtml from 'sanitize-html';
 
 // Your Google Cloud Storage should be authenticated with your service account
 const storage = new Storage({
@@ -39,4 +40,16 @@ async function uploadImage(file) {
   }
 }
 
-export default uploadImage;
+
+// sanitize-html.js
+const customSanitizeHtml = (html) => {
+  return sanitizeHtml(html, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+    allowedAttributes: {
+      img: ['src', 'alt', 'width', 'height']
+    }
+  });
+};
+
+const config = { uploadImage, customSanitizeHtml };
+export default config;
