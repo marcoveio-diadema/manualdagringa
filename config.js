@@ -3,6 +3,7 @@ dotenv.config();
 import { Storage } from '@google-cloud/storage';
 import path from 'path';
 import sanitizeHtml from 'sanitize-html';
+import slugify from 'slugify';
 
 // Your Google Cloud Storage should be authenticated with your service account
 const storage = new Storage({
@@ -51,5 +52,14 @@ const customSanitizeHtml = (html) => {
   });
 };
 
-const config = { uploadImage, customSanitizeHtml };
+// slug title
+function generateSlug(title) {
+  return slugify(title, {
+      lower: true,
+      strict: true,
+      replacement: '-'
+  });
+}
+
+const config = { uploadImage, customSanitizeHtml, generateSlug };
 export default config;

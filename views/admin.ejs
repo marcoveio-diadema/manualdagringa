@@ -1,0 +1,139 @@
+<!-- section admin -->
+<section class="section-admin">
+    <div class="admin-sidebar">
+        <h3>Menu</h3>
+        <ul>
+            <li><a href="/create-post">Novo post</a></li>
+            <li><a href="#">Posts</a></li>
+            <li><a href="#">Categories</a></li>
+            <li><a href="#">Newsletter</a></li>
+            <li><a href="#">Comentários</a></li>
+            <hr>
+            <li><a href="#">Sair</a></li>
+        </ul>
+    </div>
+    <div class="admin-content">
+        <!-- posts -->
+        <div class="posts-container">
+            <h3>Posts:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Date Created</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Sample Post 1</td>
+                        <td>2022-01-01</td>
+                        <td><button>Edit</button> / <button>Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Sample Post 2</td>
+                        <td>2022-02-01</td>
+                        <td><button>Edit</button> / <button>Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+        </div>
+        <!-- categories -->
+        <div class="newsletter-container">
+            <h3>Categorias:</h3>
+            <!-- add nex category -->
+            <div class="container new-category">
+                <form action="" method="POST">
+                    <label for="categoria">Nova Categoria:</label>
+                    <input type="text" placeholder="Digite aqui">
+                    <button type="submit" class="btn">Salvar</button>
+                </form>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Categorias</th>
+                        <th>Data</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>França</td>
+                        <td>2022-01-01</td>
+                        <td><button>Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Australia</td>
+                        <td>2022-01-01</td>
+                        <td><button>Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+        </div>
+        <!-- newsletter -->
+        <div class="newsletter-container">
+            <h3>Newsletter:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Email</th>
+                        <th>Data</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>roberto@mail.com</td>
+                        <td>2022-01-01</td>
+                        <td><button>Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>maria@mail.com</td>
+                        <td>2022-01-01</td>
+                        <td><button>Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+        </div>
+        <!-- comments -->
+        <div class="comments-container">
+            <h3>Comentários:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Post title</th>
+                        <th>Comment</th>
+                        <th>User</th>
+                        <th>Data</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Lorem ipsum dolor sit amet. Culpa cupiditate commodi magni dolorem repellat aliquam nobis ullam quisquam tenetur dolor.</td>
+                        <td>Lorem ipsum dolor sit amet. Culpa cupiditate commodi magni dolorem repellat aliquam nobis ullam quisquam tenetur dolor.</td>
+                        <td>Zezinho</td>
+                        <td>2022-01-01</td>
+                        <td><button>Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+       
+</section>

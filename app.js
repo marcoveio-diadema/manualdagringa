@@ -15,7 +15,7 @@ import db from './db/db.js';
 
 // import upload image
 import config from './config.js';
-const { uploadImage, customSanitizeHtml } = config;
+const { uploadImage, customSanitizeHtml, generateSlug } = config;
 
 // middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -103,6 +103,11 @@ app.get('/post/:postId', async (req, res) => {
         console.error('Error fetching post:', error);
         res.status(500).send('Error fetching post');
       }
+});
+
+// GET - admin page
+app.get('/admin', (req, res) => {
+    res.render('admin.ejs', { title: 'Admin'});
 });
 
 // GET - about
